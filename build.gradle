@@ -2,6 +2,9 @@ buildscript {
     ext.v = [
             kotlin: '1.2.71',
             kotlintest: '3.1.10',
+            undertow: '2.0.13.Final',
+            slf4j: '1.7.25',
+            restassured: '3.1.1'
     ]
 }
 
@@ -16,9 +19,13 @@ repositories {
 
 
 dependencies {
+
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: v.kotlin
+    implementation group: 'io.undertow', name: 'undertow-core', version: v.undertow
 
     testImplementation group: 'io.kotlintest', name: 'kotlintest-runner-junit5', version: v.kotlintest
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: v.restassured
 }
 
 compileKotlin {
