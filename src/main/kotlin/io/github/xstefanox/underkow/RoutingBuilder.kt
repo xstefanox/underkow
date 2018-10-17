@@ -1,6 +1,5 @@
-package io.github.xstefanox
+package io.github.xstefanox.underkow
 
-import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
 import io.undertow.util.HttpString
 import io.undertow.util.Methods.DELETE
@@ -8,8 +7,6 @@ import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
-
-typealias Handler = (HttpServerExchange) -> Unit
 
 class RoutingBuilder {
 
