@@ -7,7 +7,7 @@ import io.mockk.verify
 import io.restassured.RestAssured
 import org.apache.http.HttpStatus.SC_OK
 
-class UndertowDSLBuilderTest : StringSpec({
+class DSLTest : StringSpec({
 
     "Undertow DSL builder should return an Undertow instance" {
 
@@ -230,5 +230,38 @@ class UndertowDSLBuilderTest : StringSpec({
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "routes should be grouped by path prefix" {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            group("/prefix") {
+
+                get("/test1", httpHandler1)
+
+                get("/test2", httpHandler2)
+            }
+
+        } assert {
+
+            RestAssured.given()
+                .get("http://localhost:8282/prefix/test1")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+
+            RestAssured.given()
+                .get("http://localhost:8282/prefix/test2")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 })

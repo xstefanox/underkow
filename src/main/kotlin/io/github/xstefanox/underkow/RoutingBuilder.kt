@@ -10,7 +10,7 @@ import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
 
-class RoutingBuilder {
+class RoutingBuilder(private val prefix: String = "") {
 
     private val templates = mutableMapOf<String, Map<HttpString, HttpHandler>>()
 
@@ -48,12 +48,16 @@ class RoutingBuilder {
     }
 
     private fun addHandler(method: HttpString, template: String, handler: HttpHandler) {
-        templates[template] = mapOf(method to handler)
+        templates[prefix + template] = mapOf(method to handler)
     }
 
     private fun addHandler(method: HttpString, template: String, handler: (HttpServerExchange) -> Unit) {
         addHandler(method, template, HttpHandler {
             handler.invoke(it)
         })
+    }
+
+    fun group(prefix: String, init: RoutingBuilder.() -> Unit) {
+        templates.putAll(RoutingBuilder(prefix).apply(init).templates)
     }
 }
