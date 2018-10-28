@@ -297,4 +297,37 @@ class DSLTest : StringSpec({
                     .statusCode(SC_OK)
         }
     }
+
+    "nesting groups should nest routes" {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            group("/prefix1") {
+
+                get("/test1", httpHandler1)
+
+                group("/prefix2") {
+
+                    get("/test2", httpHandler2)
+                }
+            }
+
+        } assert {
+
+            RestAssured.given()
+                    .get("http://localhost:8282/prefix1/test1")
+                    .then()
+                    .assertThat()
+                    .statusCode(SC_OK)
+
+            RestAssured.given()
+                    .get("http://localhost:8282/prefix1/prefix2/test2")
+                    .then()
+                    .assertThat()
+                    .statusCode(SC_OK)
+        }
+    }
 })

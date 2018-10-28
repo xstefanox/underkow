@@ -58,6 +58,6 @@ class RoutingBuilder(private val prefix: String = "") {
     }
 
     fun group(prefix: String, init: RoutingBuilder.() -> Unit) {
-        templates.putAll(RoutingBuilder(prefix).apply(init).templates)
+        templates.putAll(RoutingBuilder(this.prefix + prefix).apply(init).templates)
     }
 }
