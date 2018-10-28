@@ -1,6 +1,5 @@
 package io.github.xstefanox.underkow
 
-import io.github.xstefanox.underkow.RoutingBuilder
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import io.restassured.RestAssured
@@ -9,8 +8,6 @@ import io.undertow.server.RoutingHandler
 import org.apache.http.HttpStatus.SC_OK
 
 class RoutingBuilderTest : StringSpec({
-
-    System.setProperty("org.jboss.logging.provider", "slf4j")
 
     fun assertWithUndertow(port : Int, routingHandler: RoutingHandler, block: () -> Unit) {
 

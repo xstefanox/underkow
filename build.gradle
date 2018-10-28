@@ -4,7 +4,8 @@ buildscript {
             kotlintest: '3.1.10',
             undertow: '2.0.14.Final',
             slf4j: '1.7.25',
-            restassured: '3.2.0'
+            restassured: '3.2.0',
+            mockk: '1.8.9',
     ]
 }
 
@@ -25,6 +26,7 @@ dependencies {
     testImplementation group: 'io.kotlintest', name: 'kotlintest-runner-junit5', version: v.kotlintest
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: v.restassured
+    testImplementation group: 'io.mockk', name: 'mockk', version: v.mockk
 }
 
 compileKotlin {
