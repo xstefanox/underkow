@@ -2,9 +2,9 @@ buildscript {
     ext.v = [
             kotlin: '1.2.71',
             kotlintest: '3.1.10',
-            undertow: '2.0.13.Final',
+            undertow: '2.0.14.Final',
             slf4j: '1.7.25',
-            restassured: '3.1.1'
+            restassured: '3.2.0'
     ]
 }
 
@@ -16,7 +16,6 @@ plugins {
 repositories {
     jcenter()
 }
-
 
 dependencies {
 
@@ -44,6 +43,12 @@ test {
 
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
     }
 }
 
