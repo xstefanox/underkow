@@ -14,39 +14,25 @@ class RoutingBuilder {
 
     private val templates = mutableMapOf<String, Map<HttpString, HttpHandler>>()
 
-    fun get(template: String, httpHandler: (HttpServerExchange) -> Unit) {
-        templates[template] = mapOf(GET to HttpHandler {
-            httpHandler.invoke(it)
-        })
-    }
+    fun get(template: String, handler: (HttpServerExchange) -> Unit) = addHandler(GET, template, handler)
 
-    fun get(template: String, httpHandler: HttpHandler) {
-        templates[template] = mapOf(GET to httpHandler)
-    }
+    fun get(template: String, handler: HttpHandler) = addHandler(GET, template, handler)
 
-    fun post(template: String, httpHandler: (HttpServerExchange) -> Unit) {
-        templates[template] = mapOf(POST to HttpHandler {
-            httpHandler.invoke(it)
-        })
-    }
+    fun post(template: String, handler: (HttpServerExchange) -> Unit) = addHandler(POST, template, handler)
 
-    fun put(template: String, httpHandler: (HttpServerExchange) -> Unit) {
-        templates[template] = mapOf(PUT to HttpHandler {
-            httpHandler.invoke(it)
-        })
-    }
+    fun post(template: String, handler: HttpHandler) = addHandler(POST, template, handler)
 
-    fun patch(template: String, httpHandler: (HttpServerExchange) -> Unit) {
-        templates[template] = mapOf(PATCH to HttpHandler {
-            httpHandler.invoke(it)
-        })
-    }
+    fun put(template: String, handler: (HttpServerExchange) -> Unit) = addHandler(PUT, template, handler)
 
-    fun delete(template: String, httpHandler: (HttpServerExchange) -> Unit) {
-        templates[template] = mapOf(DELETE to HttpHandler {
-            httpHandler.invoke(it)
-        })
-    }
+    fun put(template: String, handler: HttpHandler) = addHandler(PUT, template, handler)
+
+    fun patch(template: String, handler: (HttpServerExchange) -> Unit) = addHandler(PATCH, template, handler)
+
+    fun patch(template: String, handler: HttpHandler) = addHandler(PATCH, template, handler)
+
+    fun delete(template: String, handler: (HttpServerExchange) -> Unit) = addHandler(DELETE, template, handler)
+
+    fun delete(template: String, handler: HttpHandler) = addHandler(DELETE, template, handler)
 
     fun build(): RoutingHandler {
 
@@ -59,5 +45,15 @@ class RoutingBuilder {
         }
 
         return routingHandler
+    }
+
+    private fun addHandler(method: HttpString, template: String, handler: HttpHandler) {
+        templates[template] = mapOf(method to handler)
+    }
+
+    private fun addHandler(method: HttpString, template: String, handler: (HttpServerExchange) -> Unit) {
+        addHandler(method, template, HttpHandler {
+            handler.invoke(it)
+        })
     }
 }

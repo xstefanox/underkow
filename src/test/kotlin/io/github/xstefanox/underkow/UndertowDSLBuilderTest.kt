@@ -1,14 +1,10 @@
 package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.test.assert
+import io.github.xstefanox.underkow.test.mockHandler
 import io.kotlintest.specs.StringSpec
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
 import io.mockk.verify
 import io.restassured.RestAssured
-import io.undertow.server.HttpHandler
 import org.apache.http.HttpStatus.SC_OK
 
 class UndertowDSLBuilderTest : StringSpec({
@@ -28,8 +24,7 @@ class UndertowDSLBuilderTest : StringSpec({
 
     "configuring a GET request should add the handler to the server" {
 
-        val httpHandler = mockk<HttpHandler>()
-        every { httpHandler.handleRequest(any()) } just Runs
+        val httpHandler = mockHandler()
 
         undertow(8282, "0.0.0.0") {
 
@@ -49,8 +44,7 @@ class UndertowDSLBuilderTest : StringSpec({
 
     "GET requests could be defined inline without the need of an explicit cast" {
 
-        val httpHandler = mockk<HttpHandler>()
-        every { httpHandler.handleRequest(any()) } just Runs
+        val httpHandler = mockHandler()
 
         undertow(8282, "0.0.0.0") {
 
@@ -62,6 +56,174 @@ class UndertowDSLBuilderTest : StringSpec({
 
             RestAssured.given()
                 .get("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "configuring a POST request should add the handler to the server" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            post("/test", httpHandler)
+
+        } assert {
+
+            RestAssured.given()
+                .post("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "POST requests could be defined inline without the need of an explicit cast" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            post("/test") {
+                httpHandler.handleRequest(it)
+            }
+
+        } assert {
+
+            RestAssured.given()
+                .post("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "configuring a PUT request should add the handler to the server" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            put("/test", httpHandler)
+
+        } assert {
+
+            RestAssured.given()
+                .put("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "PUT requests could be defined inline without the need of an explicit cast" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            put("/test") {
+                httpHandler.handleRequest(it)
+            }
+
+        } assert {
+
+            RestAssured.given()
+                .put("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "configuring a PATCH request should add the handler to the server" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            patch("/test", httpHandler)
+
+        } assert {
+
+            RestAssured.given()
+                .patch("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "PATCH requests could be defined inline without the need of an explicit cast" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            patch("/test") {
+                httpHandler.handleRequest(it)
+            }
+
+        } assert {
+
+            RestAssured.given()
+                .patch("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "configuring a DELETE request should add the handler to the server" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            delete("/test", httpHandler)
+
+        } assert {
+
+            RestAssured.given()
+                .delete("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "DELETE requests could be defined inline without the need of an explicit cast" {
+
+        val httpHandler = mockHandler()
+
+        undertow(8282, "0.0.0.0") {
+
+            delete("/test") {
+                httpHandler.handleRequest(it)
+            }
+
+        } assert {
+
+            RestAssured.given()
+                .delete("http://localhost:8282/test")
                 .then()
                 .assertThat()
                 .statusCode(SC_OK)
