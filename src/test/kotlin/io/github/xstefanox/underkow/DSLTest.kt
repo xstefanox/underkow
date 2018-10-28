@@ -336,4 +336,40 @@ class DSLTest : StringSpec({
         verify(exactly = 1) { httpHandler1.handleRequest(any()) }
         verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
+
+    "base prefix should be applied to all routes" {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+
+        undertow(8282, "0.0.0.0", "/base") {
+
+            group("/prefix1") {
+
+                get("/test1", httpHandler1)
+            }
+
+            group("/prefix2") {
+
+                get("/test2", httpHandler2)
+            }
+
+        } assert {
+
+            RestAssured.given()
+                    .get("http://localhost:8282/base/prefix1/test1")
+                    .then()
+                    .assertThat()
+                    .statusCode(SC_OK)
+
+            RestAssured.given()
+                    .get("http://localhost:8282/base/prefix2/test2")
+                    .then()
+                    .assertThat()
+                    .statusCode(SC_OK)
+        }
+
+        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+    }
 })
