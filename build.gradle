@@ -22,6 +22,7 @@ dependencies {
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: v.kotlin
     implementation group: 'io.undertow', name: 'undertow-core', version: v.undertow
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
 
     testImplementation group: 'io.kotlintest', name: 'kotlintest-runner-junit5', version: v.kotlintest
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j

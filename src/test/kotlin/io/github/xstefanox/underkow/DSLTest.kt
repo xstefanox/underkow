@@ -296,6 +296,9 @@ class DSLTest : StringSpec({
                     .assertThat()
                     .statusCode(SC_OK)
         }
+
+        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
     "nesting groups should nest routes" {
@@ -329,5 +332,8 @@ class DSLTest : StringSpec({
                     .assertThat()
                     .statusCode(SC_OK)
         }
+
+        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 })

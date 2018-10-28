@@ -9,8 +9,12 @@ import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class RoutingBuilder(private val prefix: String = "") {
+
+    private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
 
     private val templates = mutableMapOf<String, Map<HttpString, HttpHandler>>()
 
@@ -40,6 +44,7 @@ class RoutingBuilder(private val prefix: String = "") {
 
         templates.forEach { template, map ->
             map.forEach { method, handler ->
+                logger.info("found route $method $template")
                 routingHandler.add(method, template, handler)
             }
         }
