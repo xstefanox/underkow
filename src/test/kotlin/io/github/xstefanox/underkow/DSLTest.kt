@@ -1,17 +1,23 @@
 package io.github.xstefanox.underkow
 
+import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
 import io.github.xstefanox.underkow.test.mockHandler
+import io.github.xstefanox.underkow.test.request
 import io.kotlintest.specs.StringSpec
 import io.mockk.verify
-import io.restassured.RestAssured
-import org.apache.http.HttpStatus.SC_OK
+import io.undertow.util.Methods.DELETE
+import io.undertow.util.Methods.GET
+import io.undertow.util.Methods.PATCH
+import io.undertow.util.Methods.POST
+import io.undertow.util.Methods.PUT
+import io.undertow.util.StatusCodes.OK
 
 class DSLTest : StringSpec({
 
     "Undertow DSL builder should return an Undertow instance" {
 
-        val undertow = undertow(8282, "0.0.0.0") {
+        val undertow = undertow(TEST_HTTP_PORT) {
 
         }
 
@@ -26,17 +32,17 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             get("/test", httpHandler)
 
         } assert {
 
-            RestAssured.given()
-                .get("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -46,7 +52,7 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             get("/test") {
                 httpHandler.handleRequest(it)
@@ -54,11 +60,11 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                .get("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -68,17 +74,17 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             post("/test", httpHandler)
 
         } assert {
 
-            RestAssured.given()
-                .post("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -88,7 +94,7 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             post("/test") {
                 httpHandler.handleRequest(it)
@@ -96,11 +102,11 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                .post("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -110,17 +116,17 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             put("/test", httpHandler)
 
         } assert {
 
-            RestAssured.given()
-                .put("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -130,7 +136,7 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             put("/test") {
                 httpHandler.handleRequest(it)
@@ -138,11 +144,11 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                .put("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -152,17 +158,17 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             patch("/test", httpHandler)
 
         } assert {
 
-            RestAssured.given()
-                .patch("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -172,7 +178,7 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             patch("/test") {
                 httpHandler.handleRequest(it)
@@ -180,11 +186,11 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                .patch("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -194,17 +200,17 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             delete("/test", httpHandler)
 
         } assert {
 
-            RestAssured.given()
-                .delete("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -214,7 +220,7 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             delete("/test") {
                 httpHandler.handleRequest(it)
@@ -222,11 +228,11 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                .delete("http://localhost:8282/test")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler.handleRequest(any()) }
@@ -237,7 +243,7 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             group("/prefix") {
 
@@ -248,17 +254,17 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                .get("http://localhost:8282/prefix/test1")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/prefix/test1",
+                expect = OK
+            )
 
-            RestAssured.given()
-                .get("http://localhost:8282/prefix/test2")
-                .then()
-                .assertThat()
-                .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/prefix/test2",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler1.handleRequest(any()) }
@@ -270,7 +276,7 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             group("/prefix1") {
 
@@ -284,17 +290,17 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                    .get("http://localhost:8282/prefix1/test1")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/prefix1/test1",
+                expect = OK
+            )
 
-            RestAssured.given()
-                    .get("http://localhost:8282/prefix2/test2")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/prefix2/test2",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler1.handleRequest(any()) }
@@ -306,7 +312,7 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(8282, "0.0.0.0") {
+        undertow(TEST_HTTP_PORT) {
 
             group("/prefix1") {
 
@@ -320,17 +326,17 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                    .get("http://localhost:8282/prefix1/test1")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/prefix1/test1",
+                expect = OK
+            )
 
-            RestAssured.given()
-                    .get("http://localhost:8282/prefix1/prefix2/test2")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/prefix1/prefix2/test2",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler1.handleRequest(any()) }
@@ -342,7 +348,7 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(8282, "0.0.0.0", "/base") {
+        undertow(TEST_HTTP_PORT, base = "/base") {
 
             group("/prefix1") {
 
@@ -356,17 +362,17 @@ class DSLTest : StringSpec({
 
         } assert {
 
-            RestAssured.given()
-                    .get("http://localhost:8282/base/prefix1/test1")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/base/prefix1/test1",
+                expect = OK
+            )
 
-            RestAssured.given()
-                    .get("http://localhost:8282/base/prefix2/test2")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+            request(
+                method = GET,
+                path = "/base/prefix2/test2",
+                expect = OK
+            )
         }
 
         verify(exactly = 1) { httpHandler1.handleRequest(any()) }

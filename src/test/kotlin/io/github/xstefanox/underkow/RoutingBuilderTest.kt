@@ -1,5 +1,6 @@
 package io.github.xstefanox.underkow
 
+import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import io.restassured.RestAssured
@@ -40,7 +41,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.get("/test") {}
 
-        assertWithUndertow(8282, routingBuilder.build()) {
+        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
                     .get("http://localhost:8282/test")
@@ -55,7 +56,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.post("/test") {}
 
-        assertWithUndertow(8282, routingBuilder.build()) {
+        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
                     .post("http://localhost:8282/test")
@@ -70,7 +71,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.put("/test") {}
 
-        assertWithUndertow(8282, routingBuilder.build()) {
+        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
                     .put("http://localhost:8282/test")
@@ -85,7 +86,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.patch("/test") {}
 
-        assertWithUndertow(8282, routingBuilder.build()) {
+        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
                     .patch("http://localhost:8282/test")
@@ -100,7 +101,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.delete("/test") {}
 
-        assertWithUndertow(8282, routingBuilder.build()) {
+        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
                     .delete("http://localhost:8282/test")
