@@ -1,46 +1,13 @@
 package io.github.xstefanox.underkow
 
+import io.github.xstefanox.underkow.test.mockExchange
+import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
 import io.kotlintest.specs.StringSpec
-import io.mockk.*
-import io.undertow.server.HttpHandler
-import io.undertow.server.HttpServerExchange
-import io.undertow.util.AttachmentKey
+import io.mockk.verify
+import io.mockk.verifyOrder
 
 class HandlerChainTest : StringSpec({
-
-    // mock a filter that delegates to its successor
-    fun mockFilter() : HttpHandler = mockHandler().apply {
-
-        val exchange = slot<HttpServerExchange>()
-
-        every {
-            handleRequest(capture(exchange))
-        } answers {
-            exchange.captured.next()
-        }
-    }
-
-    // mock the exchange and make it save the handler chain
-    fun mockExchange() = mockk<HttpServerExchange>().apply {
-
-        val attachments = mutableMapOf<AttachmentKey<*>, Any>()
-        val key = slot<AttachmentKey<HandlerChain>>()
-        val attachment = slot<HandlerChain>()
-
-        every {
-            putAttachment(capture(key), capture(attachment))
-        } answers {
-            attachments[key.captured] = attachment.captured
-            attachment.captured
-        }
-
-        every {
-            getAttachment(capture(key))
-        } answers {
-            attachments[key.captured] as HandlerChain
-        }
-    }
 
     "a delegating filter should trigger the execution of the final handler" {
 

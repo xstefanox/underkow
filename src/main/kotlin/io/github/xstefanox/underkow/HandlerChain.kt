@@ -13,7 +13,7 @@ fun HttpServerExchange.next() {
     handlerChain.advance().handleRequest(this)
 }
 
-class HandlerChain(handlers: List<HttpHandler>) : HttpHandler {
+internal class HandlerChain(handlers: List<HttpHandler>) : HttpHandler {
 
     private var currentChainedHttpHandler: ChainedHttpHandler
 

@@ -1,1 +1,4 @@
 root = true
+
+[*.kt]
+continuation_indent_size = 4

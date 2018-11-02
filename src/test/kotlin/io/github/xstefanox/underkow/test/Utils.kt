@@ -1,12 +1,17 @@
 package io.github.xstefanox.underkow.test
 
+import io.github.xstefanox.underkow.HandlerChain
+import io.github.xstefanox.underkow.next
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.slot
 import io.restassured.RestAssured.given
 import io.undertow.Undertow
 import io.undertow.server.HttpHandler
+import io.undertow.server.HttpServerExchange
+import io.undertow.util.AttachmentKey
 import io.undertow.util.HttpString
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
@@ -45,6 +50,42 @@ fun mockHandler(): HttpHandler {
     return httpHandler
 }
 
+/**
+ * Return a simple [HttpHandler] mock that delegates to ist successor without actually doing nothing.
+ */
+fun mockFilter() : HttpHandler = mockHandler().apply {
+
+    val exchange = slot<HttpServerExchange>()
+
+    every {
+        handleRequest(capture(exchange))
+    } answers {
+        exchange.captured.next()
+    }
+}
+
+/**
+ * Return a simple [HttpServerExchange] mock that saves its attachments into a map.
+ */
+fun mockExchange() = mockk<HttpServerExchange>().apply {
+
+    val attachments = mutableMapOf<AttachmentKey<*>, Any>()
+    val key = slot<AttachmentKey<HandlerChain>>()
+    val attachment = slot<HandlerChain>()
+
+    every {
+        putAttachment(capture(key), capture(attachment))
+    } answers {
+        attachments[key.captured] = attachment.captured
+        attachment.captured
+    }
+
+    every {
+        getAttachment(capture(key))
+    } answers {
+        attachments[key.captured] as HandlerChain
+    }
+}
 
 fun request(method: HttpString, path: String, expect: Int) {
 
