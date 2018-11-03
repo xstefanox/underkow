@@ -18,11 +18,14 @@ import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
+import org.slf4j.LoggerFactory
 
 /**
  * The default TCP port used for testing
  */
 const val TEST_HTTP_PORT = 8282
+
+private val LOGGER = LoggerFactory.getLogger("test")
 
 /**
  * Allow running a list of assertions in the scope of a running Undertow instance, ensuring that the instance will be
@@ -55,11 +58,13 @@ fun mockHandler(): HttpHandler {
  */
 fun mockFilter(): HttpHandler = mockHandler().apply {
 
+    val filter = this
     val exchange = slot<HttpServerExchange>()
 
     every {
         handleRequest(capture(exchange))
     } answers {
+        LOGGER.info("passing through filter {}", filter)
         exchange.captured.next()
     }
 }

@@ -1,15 +1,16 @@
 package io.github.xstefanox.underkow
 
 import io.undertow.Undertow
+import io.undertow.server.HttpHandler
 import io.undertow.server.RoutingHandler
 
-internal fun buildHandler(prefix: String, init: RoutingBuilder.() -> Unit): RoutingHandler {
-    return RoutingBuilder(prefix).apply(init).build()
+internal fun buildHandler(prefix: String, filters: Collection<HttpHandler> = emptyList(), init: RoutingBuilder.() -> Unit): RoutingHandler {
+    return RoutingBuilder(prefix, filters).apply(init).build()
 }
 
 fun undertow(port: Int, host: String = "0.0.0.0", base: String = "", init: RoutingBuilder.() -> Unit): Undertow {
     return Undertow.builder()
         .addHttpListener(port, host)
-        .setHandler(buildHandler(base, init))
+        .setHandler(buildHandler(base, init = init))
         .build()
 }

@@ -2,10 +2,12 @@ package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
+import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
 import io.github.xstefanox.underkow.test.request
 import io.kotlintest.specs.StringSpec
 import io.mockk.verify
+import io.mockk.verifyOrder
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.PATCH
@@ -353,5 +355,164 @@ class DSLTest : StringSpec({
 
         verify(exactly = 1) { httpHandler1.handleRequest(any()) }
         verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+    }
+
+    "a filter should be applied to every nested route" {
+
+        val httpHandler = mockHandler()
+        val filter = mockFilter()
+
+        undertow(TEST_HTTP_PORT) {
+            group("/prefix", filter) {
+
+                get("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix/test",
+                expect = OK
+            )
+        }
+
+        verifyOrder {
+            filter.handleRequest(any())
+            httpHandler.handleRequest(any())
+        }
+    }
+
+    "a filter should not be applied to non nested route" {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+        val filter = mockFilter()
+
+        undertow(TEST_HTTP_PORT) {
+
+            group("/prefix", filter) {
+
+                get("/test1", httpHandler1)
+            }
+
+            get("/test2", httpHandler2)
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test2",
+                expect = OK
+            )
+        }
+
+        verify(exactly = 0) { filter.handleRequest(any()) }
+        verify(exactly = 0) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+    }
+
+    "a filter should be applied to nested groups" {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+        val httpHandler3 = mockHandler()
+        val filter1 = mockFilter()
+
+        undertow(TEST_HTTP_PORT) {
+
+            group("/prefix1", filter1) {
+
+                get("/test1", httpHandler1)
+
+                group("/prefix2") {
+
+                    get("/test2", httpHandler2)
+                }
+            }
+
+            get("/test3", httpHandler3)
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix1/prefix2/test2",
+                expect = OK
+            )
+        }
+
+        verifyOrder {
+            filter1.handleRequest(any())
+            httpHandler2.handleRequest(any())
+        }
+
+        verify(exactly = 0) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 0) { httpHandler3.handleRequest(any()) }
+    }
+
+    "nested filters should be applied in chain" {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+        val httpHandler3 = mockHandler()
+        val filter1 = mockFilter()
+        val filter2 = mockFilter()
+
+        undertow(TEST_HTTP_PORT) {
+
+            group("/prefix1", filter1) {
+
+                get("/test1", httpHandler1)
+
+                group("/prefix2", filter2) {
+
+                    get("/test2", httpHandler2)
+                }
+            }
+
+            get("/test3", httpHandler3)
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix1/prefix2/test2",
+                expect = OK
+            )
+        }
+
+        verifyOrder {
+            filter1.handleRequest(any())
+            filter2.handleRequest(any())
+            httpHandler2.handleRequest(any())
+        }
+
+        verify(exactly = 0) { httpHandler1.handleRequest(any()) }
+        verify(exactly = 0) { httpHandler3.handleRequest(any()) }
+    }
+
+    "multiple filters configured on the same group should be applied in the given order" {
+
+        val filter1 = mockFilter()
+        val filter2 = mockFilter()
+        val httpHandler = mockHandler()
+
+        undertow(TEST_HTTP_PORT) {
+
+            group("/prefix", filter1, filter2) {
+
+                get("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix/test",
+                expect = OK
+            )
+        }
+
+        verifyOrder {
+            filter1.handleRequest(any())
+            filter2.handleRequest(any())
+            httpHandler.handleRequest(any())
+        }
     }
 })

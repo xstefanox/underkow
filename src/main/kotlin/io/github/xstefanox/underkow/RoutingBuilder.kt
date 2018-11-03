@@ -1,5 +1,6 @@
 package io.github.xstefanox.underkow
 
+import io.github.xstefanox.underkow.chain.HandlerChain
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
@@ -12,7 +13,7 @@ import io.undertow.util.Methods.PUT
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class RoutingBuilder(private val prefix: String = "") {
+class RoutingBuilder(private val prefix: String = "", private val filters: Collection<HttpHandler> = emptyList()) {
 
     private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
 
@@ -45,8 +46,12 @@ class RoutingBuilder(private val prefix: String = "") {
         templates.forEach { template, map ->
             map.forEach { method, handler ->
                 logger.info("found route $method $template")
-                routingHandler.add(method, template, handler)
+                routingHandler.add(method, template, HandlerChain(filters + handler))
             }
+        }
+
+        groups.forEach { group ->
+            routingHandler.addAll(group)
         }
 
         return routingHandler
@@ -62,7 +67,9 @@ class RoutingBuilder(private val prefix: String = "") {
         })
     }
 
-    fun group(prefix: String, init: RoutingBuilder.() -> Unit) {
-        templates.putAll(RoutingBuilder(this.prefix + prefix).apply(init).templates)
+    private val groups = mutableListOf<RoutingHandler>()
+
+    fun group(prefix: String, vararg filters: HttpHandler, init: RoutingBuilder.() -> Unit) {
+        groups += buildHandler(this.prefix + prefix, this.filters + filters.toList(), init)
     }
 }
