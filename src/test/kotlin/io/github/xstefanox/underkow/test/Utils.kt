@@ -53,7 +53,7 @@ fun mockHandler(): HttpHandler {
 /**
  * Return a simple [HttpHandler] mock that delegates to ist successor without actually doing nothing.
  */
-fun mockFilter() : HttpHandler = mockHandler().apply {
+fun mockFilter(): HttpHandler = mockHandler().apply {
 
     val exchange = slot<HttpServerExchange>()
 

@@ -10,12 +10,12 @@ import org.apache.http.HttpStatus.SC_OK
 
 class RoutingBuilderTest : StringSpec({
 
-    fun assertWithUndertow(port : Int, routingHandler: RoutingHandler, block: () -> Unit) {
+    fun assertWithUndertow(port: Int, routingHandler: RoutingHandler, block: () -> Unit) {
 
         val undertow = Undertow.builder()
-                .addHttpListener(port, "0.0.0.0")
-                .setHandler(routingHandler)
-                .build()
+            .addHttpListener(port, "0.0.0.0")
+            .setHandler(routingHandler)
+            .build()
 
         undertow.start()
 
@@ -44,10 +44,10 @@ class RoutingBuilderTest : StringSpec({
         assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
-                    .get("http://localhost:8282/test")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+                .get("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
         }
     }
 
@@ -59,10 +59,10 @@ class RoutingBuilderTest : StringSpec({
         assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
-                    .post("http://localhost:8282/test")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+                .post("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
         }
     }
 
@@ -74,10 +74,10 @@ class RoutingBuilderTest : StringSpec({
         assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
-                    .put("http://localhost:8282/test")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+                .put("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
         }
     }
 
@@ -89,10 +89,10 @@ class RoutingBuilderTest : StringSpec({
         assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
-                    .patch("http://localhost:8282/test")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+                .patch("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
         }
     }
 
@@ -104,10 +104,10 @@ class RoutingBuilderTest : StringSpec({
         assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
 
             RestAssured.given()
-                    .delete("http://localhost:8282/test")
-                    .then()
-                    .assertThat()
-                    .statusCode(SC_OK)
+                .delete("http://localhost:8282/test")
+                .then()
+                .assertThat()
+                .statusCode(SC_OK)
         }
     }
 })

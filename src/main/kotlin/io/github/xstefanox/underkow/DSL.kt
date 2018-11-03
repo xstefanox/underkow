@@ -9,7 +9,7 @@ internal fun buildHandler(prefix: String, init: RoutingBuilder.() -> Unit): Rout
 
 fun undertow(port: Int, host: String = "0.0.0.0", base: String = "", init: RoutingBuilder.() -> Unit): Undertow {
     return Undertow.builder()
-            .addHttpListener(port, host)
-            .setHandler(buildHandler(base, init))
-            .build()
+        .addHttpListener(port, host)
+        .setHandler(buildHandler(base, init))
+        .build()
 }
