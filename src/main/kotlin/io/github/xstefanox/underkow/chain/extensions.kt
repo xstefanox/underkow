@@ -4,15 +4,16 @@ import io.undertow.server.HttpServerExchange
 import io.undertow.util.AttachmentKey
 
 /**
- * The key used to identify a [HandlerChain] attached to a [HttpServerExchange].
+ * The key used to identify the current [ChainedHttpHandler] of a [HandlerChain] attached to a [HttpServerExchange].
  */
-internal val HANDLER_CHAIN = AttachmentKey.create(HandlerChain::class.java)
+
+internal val CURRENT_HANDLER = AttachmentKey.create(ChainedHttpHandler::class.java)
 
 /**
  * Make a [HttpServerExchange] delegate itself to the next handler in the chain.
  */
 fun HttpServerExchange.next() {
-    getAttachment(HANDLER_CHAIN)
-        .advance()
-        .handleRequest(this)
+    val nextHandler = getAttachment(CURRENT_HANDLER).next ?: throw HandlerChainExhaustedException()
+    putAttachment(CURRENT_HANDLER, nextHandler)
+    nextHandler.handleRequest(this)
 }

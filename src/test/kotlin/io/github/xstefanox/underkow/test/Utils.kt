@@ -1,6 +1,6 @@
 package io.github.xstefanox.underkow.test
 
-import io.github.xstefanox.underkow.chain.HandlerChain
+import io.github.xstefanox.underkow.chain.ChainedHttpHandler
 import io.github.xstefanox.underkow.chain.next
 import io.mockk.Runs
 import io.mockk.every
@@ -70,8 +70,8 @@ fun mockFilter(): HttpHandler = mockHandler().apply {
 fun mockExchange() = mockk<HttpServerExchange>().apply {
 
     val attachments = mutableMapOf<AttachmentKey<*>, Any>()
-    val key = slot<AttachmentKey<HandlerChain>>()
-    val attachment = slot<HandlerChain>()
+    val key = slot<AttachmentKey<ChainedHttpHandler>>()
+    val attachment = slot<ChainedHttpHandler>()
 
     every {
         putAttachment(capture(key), capture(attachment))
@@ -83,7 +83,7 @@ fun mockExchange() = mockk<HttpServerExchange>().apply {
     every {
         getAttachment(capture(key))
     } answers {
-        attachments[key.captured] as HandlerChain
+        attachments[key.captured] as ChainedHttpHandler
     }
 }
 
