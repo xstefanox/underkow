@@ -1,7 +1,7 @@
 package io.github.xstefanox.underkow.test
 
-import io.github.xstefanox.underkow.HandlerChain
-import io.github.xstefanox.underkow.next
+import io.github.xstefanox.underkow.chain.HandlerChain
+import io.github.xstefanox.underkow.chain.next
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just

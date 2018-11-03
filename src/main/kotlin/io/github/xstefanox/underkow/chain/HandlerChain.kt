@@ -1,33 +1,29 @@
-package io.github.xstefanox.underkow
+package io.github.xstefanox.underkow.chain
 
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
-import io.undertow.util.AttachmentKey
 
-private val HANDLER_CHAIN = AttachmentKey.create(HandlerChain::class.java)
-
-fun HttpServerExchange.next() {
-
-    val handlerChain = getAttachment(HANDLER_CHAIN)
-
-    handlerChain.advance().handleRequest(this)
-}
-
-internal class HandlerChain(handlers: List<HttpHandler>) : HttpHandler {
+/**
+ * Wrap a collection of handlers in a chain that can be traversed from the head to the tail. Once exhausted, the chain
+ * cannot be used anymore.
+ */
+internal class HandlerChain(handlers: Collection<HttpHandler>) : HttpHandler {
 
     private var currentChainedHttpHandler: ChainedHttpHandler
 
     init {
-        require(handlers.isNotEmpty()) {
-            "handler chain must not be empty"
+        if (handlers.isEmpty()) {
+            throw EmptyHandlerChainException()
         }
 
-        currentChainedHttpHandler = handlers.map(::ChainedHttpHandler).reduceRight { element, tail ->
+        if (handlers.toSet().size < handlers.size) {
+            throw DuplicateHandlersInChainException()
+        }
+
+        currentChainedHttpHandler = handlers.map(HandlerChain::ChainedHttpHandler).reduceRight { element, tail ->
             element.next = tail
             element
         }
-
-        println(currentChainedHttpHandler)
     }
 
     override fun handleRequest(exchange: HttpServerExchange) {
@@ -36,7 +32,7 @@ internal class HandlerChain(handlers: List<HttpHandler>) : HttpHandler {
     }
 
     fun advance(): HttpHandler {
-        currentChainedHttpHandler = currentChainedHttpHandler.next ?: throw IllegalStateException("no more handlers in the chain")
+        currentChainedHttpHandler = currentChainedHttpHandler.next ?: throw HandlerChainExhaustedException()
         return currentChainedHttpHandler
     }
 
