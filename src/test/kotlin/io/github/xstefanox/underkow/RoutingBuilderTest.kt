@@ -1,6 +1,7 @@
 package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
+import io.github.xstefanox.underkow.test.assert
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import io.restassured.RestAssured
@@ -10,20 +11,11 @@ import org.apache.http.HttpStatus.SC_OK
 
 class RoutingBuilderTest : StringSpec({
 
-    fun assertWithUndertow(port: Int, routingHandler: RoutingHandler, block: () -> Unit) {
-
-        val undertow = Undertow.builder()
+    fun withUndertow(port: Int, routingHandler: RoutingHandler): Undertow {
+        return Undertow.builder()
             .addHttpListener(port, "0.0.0.0")
             .setHandler(routingHandler)
             .build()
-
-        undertow.start()
-
-        try {
-            block()
-        } finally {
-            undertow.stop()
-        }
     }
 
     "routing builder should produce a new object on every execution" {
@@ -41,7 +33,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.get("/test") {}
 
-        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
+        withUndertow(TEST_HTTP_PORT, routingBuilder.build()) assert {
 
             RestAssured.given()
                 .get("http://localhost:8282/test")
@@ -56,7 +48,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.post("/test") {}
 
-        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
+        withUndertow(TEST_HTTP_PORT, routingBuilder.build()) assert {
 
             RestAssured.given()
                 .post("http://localhost:8282/test")
@@ -71,7 +63,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.put("/test") {}
 
-        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
+        withUndertow(TEST_HTTP_PORT, routingBuilder.build()) assert {
 
             RestAssured.given()
                 .put("http://localhost:8282/test")
@@ -86,7 +78,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.patch("/test") {}
 
-        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
+        withUndertow(TEST_HTTP_PORT, routingBuilder.build()) assert {
 
             RestAssured.given()
                 .patch("http://localhost:8282/test")
@@ -101,7 +93,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
         routingBuilder.delete("/test") {}
 
-        assertWithUndertow(TEST_HTTP_PORT, routingBuilder.build()) {
+        withUndertow(TEST_HTTP_PORT, routingBuilder.build()) assert {
 
             RestAssured.given()
                 .delete("http://localhost:8282/test")
