@@ -6,6 +6,7 @@ buildscript {
             slf4j      : '1.7.25',
             restassured: '3.2.0',
             mockk      : '1.8.12.kotlin13',
+            coroutines : '1.0.1'
     ]
 }
 
@@ -23,6 +24,7 @@ repositories {
 dependencies {
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: v.kotlin
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: v.coroutines
     implementation group: 'io.undertow', name: 'undertow-core', version: v.undertow
     implementation group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
 
@@ -38,6 +40,7 @@ configurations.all {
         failOnVersionConflict()
 
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: v.kotlin
+        force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-common', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: v.kotlin
         force group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'

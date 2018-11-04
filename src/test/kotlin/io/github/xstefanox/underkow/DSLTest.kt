@@ -6,8 +6,8 @@ import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
 import io.github.xstefanox.underkow.test.request
 import io.kotlintest.specs.StringSpec
-import io.mockk.verify
-import io.mockk.verifyOrder
+import io.mockk.Ordering.ORDERED
+import io.mockk.coVerify
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.PATCH
@@ -44,7 +44,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "GET requests could be defined inline without the need of an explicit cast" {
@@ -64,7 +64,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "configuring a POST request should add the handler to the server" {
@@ -82,7 +82,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "POST requests could be defined inline without the need of an explicit cast" {
@@ -102,7 +102,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "configuring a PUT request should add the handler to the server" {
@@ -120,7 +120,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "PUT requests could be defined inline without the need of an explicit cast" {
@@ -140,7 +140,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "configuring a PATCH request should add the handler to the server" {
@@ -158,7 +158,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "PATCH requests could be defined inline without the need of an explicit cast" {
@@ -178,7 +178,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "configuring a DELETE request should add the handler to the server" {
@@ -196,7 +196,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "DELETE requests could be defined inline without the need of an explicit cast" {
@@ -217,7 +217,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
     "routes should be grouped by path prefix" {
@@ -248,8 +248,8 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
     "multiple path groups could be defined in the same block" {
@@ -283,8 +283,8 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
     "nesting path groups should nest routes" {
@@ -318,8 +318,8 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
     "base prefix should be applied to all routes" {
@@ -353,8 +353,8 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 1) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
     "a filter should be applied to every nested route" {
@@ -376,7 +376,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             filter.handleRequest(any())
             httpHandler.handleRequest(any())
         }
@@ -405,9 +405,9 @@ class DSLTest : StringSpec({
             )
         }
 
-        verify(exactly = 0) { filter.handleRequest(any()) }
-        verify(exactly = 0) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 1) { httpHandler2.handleRequest(any()) }
+        coVerify(exactly = 0) { filter.handleRequest(any()) }
+        coVerify(exactly = 0) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
     "a filter should be applied to nested path groups" {
@@ -439,13 +439,13 @@ class DSLTest : StringSpec({
             )
         }
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             filter1.handleRequest(any())
             httpHandler2.handleRequest(any())
         }
 
-        verify(exactly = 0) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 0) { httpHandler3.handleRequest(any()) }
+        coVerify(exactly = 0) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 0) { httpHandler3.handleRequest(any()) }
     }
 
     "nested filters should be applied in chain" {
@@ -478,14 +478,14 @@ class DSLTest : StringSpec({
             )
         }
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             filter1.handleRequest(any())
             filter2.handleRequest(any())
             httpHandler2.handleRequest(any())
         }
 
-        verify(exactly = 0) { httpHandler1.handleRequest(any()) }
-        verify(exactly = 0) { httpHandler3.handleRequest(any()) }
+        coVerify(exactly = 0) { httpHandler1.handleRequest(any()) }
+        coVerify(exactly = 0) { httpHandler3.handleRequest(any()) }
     }
 
     "multiple filters configured on the same path should be applied in the given order" {
@@ -509,7 +509,7 @@ class DSLTest : StringSpec({
             )
         }
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             filter1.handleRequest(any())
             filter2.handleRequest(any())
             httpHandler.handleRequest(any())

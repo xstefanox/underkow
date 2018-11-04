@@ -1,16 +1,16 @@
 package io.github.xstefanox.underkow.chain
 
-import io.undertow.server.HttpHandler
+import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.undertow.server.HttpServerExchange
 
 /**
- * Decorate a [HttpHandler] with a reference to the next element of the chain.
+ * Decorate a [SuspendingHttpHandler] with a reference to the next element of the chain.
  */
-class ChainedHttpHandler(private val httpHandler: HttpHandler) : HttpHandler {
+class ChainedHttpHandler(private val httpHandler: SuspendingHttpHandler) : SuspendingHttpHandler {
 
     var next: ChainedHttpHandler? = null
 
-    override fun handleRequest(exchange: HttpServerExchange?) {
+    override suspend fun handleRequest(exchange: HttpServerExchange) {
         httpHandler.handleRequest(exchange)
     }
 }

@@ -1,16 +1,27 @@
 package io.github.xstefanox.underkow
 
 import io.undertow.Undertow
-import io.undertow.server.HttpHandler
-import io.undertow.server.RoutingHandler
 
-internal fun buildHandler(prefix: String, filters: Collection<HttpHandler> = emptyList(), init: RoutingBuilder.() -> Unit): RoutingHandler {
-    return RoutingBuilder(prefix, filters).apply(init).build()
-}
+/**
+ * Default is to listen to requested directed to any host.
+ */
+private const val DEFAULT_HOST = "0.0.0.0"
 
-fun undertow(port: Int, host: String = "0.0.0.0", base: String = "", init: RoutingBuilder.() -> Unit): Undertow {
+/**
+ * Default is to not apply any prefix to the configured routes
+ */
+private const val DEFAULT_PREFIX = ""
+
+/**
+ * Build an [Undertow] instance using a dedicated DSL.
+ */
+fun undertow(port: Int, host: String = DEFAULT_HOST, base: String = DEFAULT_PREFIX, init: RoutingBuilder.() -> Unit): Undertow {
     return Undertow.builder()
         .addHttpListener(port, host)
-        .setHandler(buildHandler(base, init = init))
+        .setHandler(
+            RoutingBuilder(base)
+                .apply(init)
+                .build()
+        )
         .build()
 }

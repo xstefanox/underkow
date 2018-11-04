@@ -1,12 +1,19 @@
 package io.github.xstefanox.underkow.chain
 
+import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
+import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
-import io.mockk.verify
-import io.mockk.verifyOrder
+import io.mockk.Ordering.ORDERED
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import kotlin.reflect.KClass
 
 class HandlerChainTest : StringSpec({
 
@@ -16,11 +23,11 @@ class HandlerChainTest : StringSpec({
         val handler2 = mockHandler()
         val exchange = mockExchange()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2))
+        val handlerChain = HandlerChain(listOf(handler1, handler2), SuspendingExceptionHandler(emptyMap()))
 
         handlerChain.handleRequest(exchange)
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             handler1.handleRequest(eq(exchange))
             handler2.handleRequest(eq(exchange))
         }
@@ -33,11 +40,11 @@ class HandlerChainTest : StringSpec({
         val handler3 = mockHandler()
         val exchange = mockExchange()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3))
+        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap()))
 
         handlerChain.handleRequest(exchange)
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             handler1.handleRequest(eq(exchange))
             handler2.handleRequest(eq(exchange))
             handler3.handleRequest(eq(exchange))
@@ -51,22 +58,22 @@ class HandlerChainTest : StringSpec({
         val handler3 = mockHandler()
         val exchange = mockExchange()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3))
+        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap()))
 
         handlerChain.handleRequest(exchange)
 
-        verifyOrder {
+        coVerify(ordering = ORDERED) {
             handler1.handleRequest(eq(exchange))
             handler2.handleRequest(eq(exchange))
         }
 
-        verify(exactly = 0) { handler3.handleRequest(eq(exchange)) }
+        coVerify(exactly = 0) { handler3.handleRequest(eq(exchange)) }
     }
 
     "the handler chain should be not empty" {
 
         shouldThrow<EmptyHandlerChainException> {
-            HandlerChain(emptyList())
+            HandlerChain(emptyList(), SuspendingExceptionHandler(emptyMap()))
         }
     }
 
@@ -75,7 +82,7 @@ class HandlerChainTest : StringSpec({
         val handler = mockFilter()
 
         shouldThrow<DuplicateHandlersInChainException> {
-            HandlerChain(listOf(handler, handler))
+            HandlerChain(listOf(handler, handler), SuspendingExceptionHandler(emptyMap()))
         }
     }
 
@@ -83,11 +90,20 @@ class HandlerChainTest : StringSpec({
 
         val handler = mockFilter()
         val exchange = mockExchange()
+        val asyncExceptionHandler = mockk<SuspendingExceptionHandler>()
 
-        val handlerChain = HandlerChain(listOf(handler))
+        coEvery {
+            asyncExceptionHandler.handleRequest(any())
+        } just runs
 
-        shouldThrow<HandlerChainExhaustedException> {
-            handlerChain.handleRequest(exchange)
-        }
+        val exceptionHandlerMap: Map<KClass<out Throwable>, SuspendingHttpHandler> = mapOf(
+            HandlerChainExhaustedException::class to asyncExceptionHandler
+        )
+
+        val handlerChain = HandlerChain(listOf(handler), SuspendingExceptionHandler(exceptionHandlerMap))
+
+        handlerChain.handleRequest(exchange)
+
+        coVerify { asyncExceptionHandler.handleRequest(eq(exchange)) }
     }
 })
