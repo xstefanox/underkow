@@ -3,6 +3,7 @@ package io.github.xstefanox.underkow
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
 import io.github.xstefanox.underkow.test.mockFilter
+import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.mockHandler
 import io.github.xstefanox.underkow.test.request
 import io.kotlintest.specs.StringSpec
@@ -67,6 +68,22 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
+    "GET requests could be writter as regular, non-suspending HttpHandler" {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            get("/test", httpHandler)
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
     "configuring a POST request should add the handler to the server" {
 
         val httpHandler = mockHandler()
@@ -103,6 +120,22 @@ class DSLTest : StringSpec({
         }
 
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "POST requests could be writter as regular, non-suspending HttpHandler" {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            post("/test", httpHandler)
+        } assert {
+
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
+        }
     }
 
     "configuring a PUT request should add the handler to the server" {
@@ -143,6 +176,22 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
+    "PUT requests could be writter as regular, non-suspending HttpHandler" {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            put("/test", httpHandler)
+        } assert {
+
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
     "configuring a PATCH request should add the handler to the server" {
 
         val httpHandler = mockHandler()
@@ -179,6 +228,22 @@ class DSLTest : StringSpec({
         }
 
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "PATCH requests could be writter as regular, non-suspending HttpHandler" {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            patch("/test", httpHandler)
+        } assert {
+
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
+        }
     }
 
     "configuring a DELETE request should add the handler to the server" {
@@ -218,6 +283,22 @@ class DSLTest : StringSpec({
         }
 
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "DELETE requests could be writter as regular, non-suspending HttpHandler" {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            delete("/test", httpHandler)
+        } assert {
+
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
+        }
     }
 
     "routes should be grouped by path prefix" {

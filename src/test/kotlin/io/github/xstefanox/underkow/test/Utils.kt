@@ -45,11 +45,29 @@ infix fun Undertow.assert(block: () -> Unit) {
 }
 
 /**
- * Return a simple [HttpHandler] mock that executes without actually doing nothing.
+ * Return a simple [SuspendingHttpHandler] mock that executes without actually doing nothing.
  */
 fun mockHandler(): SuspendingHttpHandler {
 
     val handler = mockk<SuspendingHttpHandler>()
+    val exchange = slot<HttpServerExchange>()
+
+    coEvery {
+        handler.handleRequest(capture(exchange))
+    } coAnswers {
+        LOGGER.info("reached handler {}", handler)
+        exchange.captured.endExchange()
+    }
+
+    return handler
+}
+
+/**
+ * Return a simple [HttpHandler] mock that executes without actually doing nothing.
+ */
+fun mockStandardHandler(): HttpHandler {
+
+    val handler = mockk<HttpHandler>()
     val exchange = slot<HttpServerExchange>()
 
     coEvery {
