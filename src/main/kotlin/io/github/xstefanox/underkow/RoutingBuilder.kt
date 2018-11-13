@@ -50,7 +50,7 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
             }
         }
 
-        groups.forEach { group ->
+        paths.forEach { group ->
             routingHandler.addAll(group)
         }
 
@@ -67,9 +67,9 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
         })
     }
 
-    private val groups = mutableListOf<RoutingHandler>()
+    private val paths = mutableListOf<RoutingHandler>()
 
-    fun group(prefix: String, vararg filters: HttpHandler, init: RoutingBuilder.() -> Unit) {
-        groups += buildHandler(this.prefix + prefix, this.filters + filters.toList(), init)
+    fun path(prefix: String, vararg filters: HttpHandler, init: RoutingBuilder.() -> Unit) {
+        paths += buildHandler(this.prefix + prefix, this.filters + filters.toList(), init)
     }
 }

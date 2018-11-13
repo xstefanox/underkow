@@ -227,7 +227,7 @@ class DSLTest : StringSpec({
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix") {
+            path("/prefix") {
 
                 get("/test1", httpHandler1)
 
@@ -252,19 +252,19 @@ class DSLTest : StringSpec({
         verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "multiple groups could be defined in the same block" {
+    "multiple path groups could be defined in the same block" {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix1") {
+            path("/prefix1") {
 
                 get("/test1", httpHandler1)
             }
 
-            group("/prefix2") {
+            path("/prefix2") {
 
                 get("/test2", httpHandler2)
             }
@@ -287,18 +287,18 @@ class DSLTest : StringSpec({
         verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "nesting groups should nest routes" {
+    "nesting path groups should nest routes" {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix1") {
+            path("/prefix1") {
 
                 get("/test1", httpHandler1)
 
-                group("/prefix2") {
+                path("/prefix2") {
 
                     get("/test2", httpHandler2)
                 }
@@ -329,12 +329,12 @@ class DSLTest : StringSpec({
 
         undertow(TEST_HTTP_PORT, base = "/base") {
 
-            group("/prefix1") {
+            path("/prefix1") {
 
                 get("/test1", httpHandler1)
             }
 
-            group("/prefix2") {
+            path("/prefix2") {
 
                 get("/test2", httpHandler2)
             }
@@ -363,7 +363,7 @@ class DSLTest : StringSpec({
         val filter = mockFilter()
 
         undertow(TEST_HTTP_PORT) {
-            group("/prefix", filter) {
+            path("/prefix", filter) {
 
                 get("/test", httpHandler)
             }
@@ -390,7 +390,7 @@ class DSLTest : StringSpec({
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix", filter) {
+            path("/prefix", filter) {
 
                 get("/test1", httpHandler1)
             }
@@ -410,7 +410,7 @@ class DSLTest : StringSpec({
         verify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "a filter should be applied to nested groups" {
+    "a filter should be applied to nested path groups" {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -419,11 +419,11 @@ class DSLTest : StringSpec({
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix1", filter1) {
+            path("/prefix1", filter1) {
 
                 get("/test1", httpHandler1)
 
-                group("/prefix2") {
+                path("/prefix2") {
 
                     get("/test2", httpHandler2)
                 }
@@ -458,11 +458,11 @@ class DSLTest : StringSpec({
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix1", filter1) {
+            path("/prefix1", filter1) {
 
                 get("/test1", httpHandler1)
 
-                group("/prefix2", filter2) {
+                path("/prefix2", filter2) {
 
                     get("/test2", httpHandler2)
                 }
@@ -488,7 +488,7 @@ class DSLTest : StringSpec({
         verify(exactly = 0) { httpHandler3.handleRequest(any()) }
     }
 
-    "multiple filters configured on the same group should be applied in the given order" {
+    "multiple filters configured on the same path should be applied in the given order" {
 
         val filter1 = mockFilter()
         val filter2 = mockFilter()
@@ -496,7 +496,7 @@ class DSLTest : StringSpec({
 
         undertow(TEST_HTTP_PORT) {
 
-            group("/prefix", filter1, filter2) {
+            path("/prefix", filter1, filter2) {
 
                 get("/test", httpHandler)
             }
