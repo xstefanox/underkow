@@ -596,4 +596,48 @@ class DSLTest : StringSpec({
             httpHandler.handleRequest(any())
         }
     }
+
+    "a route should be handled by more than one method" {
+
+        val httpHandler = mockHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            get("/test", httpHandler)
+            post("/test", httpHandler)
+            put("/test", httpHandler)
+            patch("/test", httpHandler)
+            delete("/test", httpHandler)
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
+
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
+
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
+
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
+
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
 })

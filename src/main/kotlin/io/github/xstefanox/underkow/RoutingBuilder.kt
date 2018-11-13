@@ -18,7 +18,7 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
 
     private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
 
-    private val templates = mutableMapOf<String, Map<HttpString, SuspendingHttpHandler>>()
+    private val templates = mutableMapOf<String, MutableMap<HttpString, SuspendingHttpHandler>>()
 
     private val paths = mutableListOf<RoutingHandler>()
 
@@ -79,7 +79,12 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
     }
 
     private fun addHandler(method: HttpString, template: String, handler: SuspendingHttpHandler) {
-        templates[prefix + template] = mapOf(method to handler)
+
+        val pathHandlers = templates.computeIfAbsent(prefix + template) {
+            mutableMapOf()
+        }
+
+        pathHandlers[method] = handler
     }
 
     private fun addHandler(method: HttpString, template: String, handler: HttpHandler) {
