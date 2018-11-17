@@ -2,13 +2,17 @@ package io.github.xstefanox.underkow.test
 
 import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.chain.next
+import io.kotlintest.seconds
 import io.kotlintest.shouldThrow
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.slot
 import io.restassured.RestAssured.given
 import io.undertow.Undertow
+import io.undertow.io.Sender
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.AttachmentKey
@@ -60,6 +64,15 @@ fun mockHandler(): SuspendingHttpHandler {
     }
 
     return handler
+}
+
+fun SuspendingHttpHandler.throwing(throwable: Throwable): SuspendingHttpHandler {
+
+    coEvery {
+        handleRequest(any())
+    } throws throwable
+
+    return this
 }
 
 /**
@@ -136,6 +149,27 @@ fun mockExchange() = mockk<HttpServerExchange>().apply {
     } answers {
         exchange
     }
+
+    val statusCode = slot<Int>()
+
+    every {
+        setStatusCode(capture(statusCode))
+    } answers {
+        exchange
+    }
+
+    every {
+        responseSender
+    } answers {
+
+        val responseSender = mockk<Sender>()
+
+        every {
+            responseSender.send(any<String>())
+        } just runs
+
+        responseSender
+    }
 }
 
 /**
@@ -166,3 +200,5 @@ inline fun <reified T : Throwable> coShouldThrow(noinline block: suspend () -> A
         block()
     }
 }
+
+fun <T> eventually(f: () -> T): T = io.kotlintest.eventually(5.seconds, AssertionError::class.java, f)

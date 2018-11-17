@@ -4,8 +4,12 @@ import io.github.xstefanox.underkow.test.coShouldThrow
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockHandler
 import io.kotlintest.specs.StringSpec
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
 import io.undertow.server.handlers.ExceptionHandler.THROWABLE
 import kotlinx.coroutines.runBlocking
 
@@ -13,9 +17,11 @@ class SuspendingExceptionHandlerTest : StringSpec({
 
     class AnException : Exception()
 
-    "an exchange with not throwable attched cannot be handled" {
+    "an exchange without attached throwable cannot be handled" {
 
-        val exceptionHandler = SuspendingExceptionHandler(emptyMap())
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+
+        val exceptionHandler = SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler)
 
         coShouldThrow<ThrowableNotAttachedException> {
             exceptionHandler.handleRequest(mockExchange())
@@ -33,10 +39,11 @@ class SuspendingExceptionHandlerTest : StringSpec({
                 exception
             }
         }
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
         val exceptionHandler = SuspendingExceptionHandler(mapOf(
             AnException::class to handler
-        ))
+        ), unhandledExceptionHandler)
 
         runBlocking {
             exceptionHandler.handleRequest(exchange)
@@ -47,9 +54,14 @@ class SuspendingExceptionHandlerTest : StringSpec({
         }
     }
 
-    "exception not handled by the exception handler should be rethrown" {
+    "exception not handled by the exception handler should complete the exception" {
 
         val exception = AnException()
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>().apply {
+            coEvery {
+                handleRequest(any())
+            } just runs
+        }
 
         val exchange = mockExchange().apply {
             every {
@@ -59,10 +71,12 @@ class SuspendingExceptionHandlerTest : StringSpec({
             }
         }
 
-        val exceptionHandler = SuspendingExceptionHandler(emptyMap())
+        runBlocking {
+            SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler).handleRequest(exchange)
+        }
 
-        coShouldThrow<AnException> {
-            exceptionHandler.handleRequest(exchange)
+        coVerify {
+            unhandledExceptionHandler.handleRequest(eq(exchange))
         }
     }
 })

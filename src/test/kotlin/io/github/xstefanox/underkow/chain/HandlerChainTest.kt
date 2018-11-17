@@ -1,7 +1,9 @@
 package io.github.xstefanox.underkow.chain
 
-import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
 import io.github.xstefanox.underkow.SuspendingHttpHandler
+import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
+import io.github.xstefanox.underkow.exception.UnhandledExceptionHandler
+import io.github.xstefanox.underkow.test.eventually
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
@@ -22,14 +24,17 @@ class HandlerChainTest : StringSpec({
         val handler1 = mockFilter()
         val handler2 = mockHandler()
         val exchange = mockExchange()
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2), SuspendingExceptionHandler(emptyMap()))
+        val handlerChain = HandlerChain(listOf(handler1, handler2), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
 
         handlerChain.handleRequest(exchange)
 
-        coVerify(ordering = ORDERED) {
-            handler1.handleRequest(eq(exchange))
-            handler2.handleRequest(eq(exchange))
+        eventually {
+            coVerify(ordering = ORDERED) {
+                handler1.handleRequest(eq(exchange))
+                handler2.handleRequest(eq(exchange))
+            }
         }
     }
 
@@ -39,15 +44,18 @@ class HandlerChainTest : StringSpec({
         val handler2 = mockFilter()
         val handler3 = mockHandler()
         val exchange = mockExchange()
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap()))
+        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
 
         handlerChain.handleRequest(exchange)
 
-        coVerify(ordering = ORDERED) {
-            handler1.handleRequest(eq(exchange))
-            handler2.handleRequest(eq(exchange))
-            handler3.handleRequest(eq(exchange))
+        eventually {
+            coVerify(ordering = ORDERED) {
+                handler1.handleRequest(eq(exchange))
+                handler2.handleRequest(eq(exchange))
+                handler3.handleRequest(eq(exchange))
+            }
         }
     }
 
@@ -57,32 +65,40 @@ class HandlerChainTest : StringSpec({
         val handler2 = mockHandler()
         val handler3 = mockHandler()
         val exchange = mockExchange()
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap()))
+        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
 
         handlerChain.handleRequest(exchange)
 
-        coVerify(ordering = ORDERED) {
-            handler1.handleRequest(eq(exchange))
-            handler2.handleRequest(eq(exchange))
-        }
+        eventually {
+            coVerify(ordering = ORDERED) {
+                handler1.handleRequest(eq(exchange))
+                handler2.handleRequest(eq(exchange))
+            }
 
-        coVerify(exactly = 0) { handler3.handleRequest(eq(exchange)) }
+            coVerify(exactly = 0) {
+                handler3.handleRequest(eq(exchange))
+            }
+        }
     }
 
     "the handler chain should be not empty" {
 
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+
         shouldThrow<EmptyHandlerChainException> {
-            HandlerChain(emptyList(), SuspendingExceptionHandler(emptyMap()))
+            HandlerChain(emptyList(), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
         }
     }
 
     "the handler chain should not contain duplicates" {
 
         val handler = mockFilter()
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
         shouldThrow<DuplicateHandlersInChainException> {
-            HandlerChain(listOf(handler, handler), SuspendingExceptionHandler(emptyMap()))
+            HandlerChain(listOf(handler, handler), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
         }
     }
 
@@ -91,6 +107,7 @@ class HandlerChainTest : StringSpec({
         val handler = mockFilter()
         val exchange = mockExchange()
         val asyncExceptionHandler = mockk<SuspendingExceptionHandler>()
+        val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
         coEvery {
             asyncExceptionHandler.handleRequest(any())
@@ -100,10 +117,14 @@ class HandlerChainTest : StringSpec({
             HandlerChainExhaustedException::class to asyncExceptionHandler
         )
 
-        val handlerChain = HandlerChain(listOf(handler), SuspendingExceptionHandler(exceptionHandlerMap))
+        val handlerChain = HandlerChain(listOf(handler), SuspendingExceptionHandler(exceptionHandlerMap, unhandledExceptionHandler))
 
         handlerChain.handleRequest(exchange)
 
-        coVerify { asyncExceptionHandler.handleRequest(eq(exchange)) }
+        eventually {
+            coVerify {
+                asyncExceptionHandler.handleRequest(eq(exchange))
+            }
+        }
     }
 })

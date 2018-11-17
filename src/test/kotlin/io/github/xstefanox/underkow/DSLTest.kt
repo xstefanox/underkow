@@ -3,17 +3,22 @@ package io.github.xstefanox.underkow
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
 import io.github.xstefanox.underkow.test.mockFilter
-import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.mockHandler
+import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.request
+import io.github.xstefanox.underkow.test.throwing
 import io.kotlintest.specs.StringSpec
 import io.mockk.Ordering.ORDERED
+import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.slot
+import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
+import io.undertow.util.StatusCodes.INTERNAL_SERVER_ERROR
 import io.undertow.util.StatusCodes.OK
 
 class DSLTest : StringSpec({
@@ -569,7 +574,7 @@ class DSLTest : StringSpec({
         coVerify(exactly = 0) { httpHandler3.handleRequest(any()) }
     }
 
-    "multiple filters configured on the same path should be applied in the given order" {
+    "multiple filters declared on the same path should be applied in the given order" {
 
         val filter1 = mockFilter()
         val filter2 = mockFilter()
@@ -637,6 +642,101 @@ class DSLTest : StringSpec({
                 method = DELETE,
                 path = "/test",
                 expect = OK
+            )
+        }
+    }
+
+    class TestException1 : Exception()
+
+    class TestException2 : Exception()
+
+    "exceptions should be handled by the configured handlers" {
+
+        val exchange = slot<HttpServerExchange>()
+        val handler = mockHandler().throwing(TestException1())
+        val testException1Handler = mockHandler()
+
+        coEvery {
+            testException1Handler.handleRequest(capture(exchange))
+        } coAnswers {
+            exchange.captured.endExchange()
+        }
+
+        undertow(TEST_HTTP_PORT) {
+            get("/test", handler)
+            on(TestException1::class, testException1Handler)
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify {
+            testException1Handler.handleRequest(any())
+        }
+    }
+
+    "when no exception handled are declared, any exception should return an INTERNAL SERVER ERROR" {
+
+        val handler = mockHandler().throwing(TestException1())
+
+        undertow(TEST_HTTP_PORT) {
+            get("/test", handler)
+        } assert {
+            request(
+                method = GET,
+                path = "/test",
+                expect = INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    "an exception not handled by a declared handler should return an INTERNAL SERVER ERROR" {
+
+        val handler = mockHandler().throwing(TestException1())
+        val testException2Handler = mockHandler()
+
+        undertow(TEST_HTTP_PORT) {
+            get("/test", handler)
+            on(TestException2::class, testException2Handler)
+        } assert {
+            request(
+                method = GET,
+                path = "/test",
+                expect = INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    "exception handler should be applied only to handlers inside the path groups into which they are declared" {
+
+        val handler1 = mockHandler().throwing(TestException1())
+        val handler2 = mockHandler().throwing(TestException1())
+        val testException1Handler = mockHandler()
+
+        undertow(TEST_HTTP_PORT) {
+
+            get("/test1", handler1)
+
+            path("/prefix2") {
+                get("/test2", handler2)
+                on(TestException1::class, testException1Handler)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix2/test2",
+                expect = OK
+            )
+
+            request(
+                method = GET,
+                path = "/test1",
+                expect = INTERNAL_SERVER_ERROR
             )
         }
     }

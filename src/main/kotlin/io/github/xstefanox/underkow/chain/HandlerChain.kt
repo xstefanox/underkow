@@ -1,8 +1,8 @@
 package io.github.xstefanox.underkow.chain
 
-import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
-import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.HttpScope
+import io.github.xstefanox.underkow.SuspendingHttpHandler
+import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.handlers.ExceptionHandler.THROWABLE

@@ -2,6 +2,7 @@ package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.chain.HandlerChain
 import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
+import io.github.xstefanox.underkow.exception.UnhandledExceptionHandler
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
@@ -13,6 +14,9 @@ import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.reflect.KClass
+
+private val UNHANDLED_EXCEPTION_HANDLER = UnhandledExceptionHandler()
 
 class RoutingBuilder(private val prefix: String = "", private val filters: Collection<SuspendingHttpHandler> = emptyList()) {
 
@@ -59,7 +63,7 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
         templates.forEach { template, map ->
             map.forEach { method, handler ->
                 logger.info("found route $method $template")
-                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(emptyMap())))
+                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, UNHANDLED_EXCEPTION_HANDLER)))
             }
         }
 
@@ -101,5 +105,11 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
                 handler.invoke(exchange)
             }
         })
+    }
+
+    private val exceptions = mutableMapOf<KClass<out Throwable>, SuspendingHttpHandler>()
+
+    fun on(exception: KClass<out Exception>, handler: SuspendingHttpHandler) {
+        exceptions[exception] = handler
     }
 }

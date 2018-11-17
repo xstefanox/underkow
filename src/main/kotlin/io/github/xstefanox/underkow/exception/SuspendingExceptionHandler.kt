@@ -8,12 +8,15 @@ import kotlin.reflect.KClass
 /**
  * A [SuspendingHttpHandler] that can handle exception-throwing exchanges.
  */
-class SuspendingExceptionHandler(private val exceptionHandlers: Map<KClass<out Throwable>, SuspendingHttpHandler>) : SuspendingHttpHandler {
+class SuspendingExceptionHandler(
+    private val exceptionHandlers: Map<KClass<out Throwable>, SuspendingHttpHandler>,
+    private val unhandledExceptionHandler: UnhandledExceptionHandler
+) : SuspendingHttpHandler {
 
     override suspend fun handleRequest(exchange: HttpServerExchange) {
 
         val throwable = exchange.getAttachment(THROWABLE) ?: throw ThrowableNotAttachedException(exchange)
 
-        (exceptionHandlers[throwable::class] ?: throw throwable).handleRequest(exchange)
+        (exceptionHandlers[throwable::class] ?: unhandledExceptionHandler).handleRequest(exchange)
     }
 }
