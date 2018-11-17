@@ -112,4 +112,24 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
     fun on(exception: KClass<out Exception>, handler: SuspendingHttpHandler) {
         exceptions[exception] = handler
     }
+
+    inline fun <reified T : Exception> on(handler: SuspendingHttpHandler) {
+        on(T::class, handler)
+    }
+
+    inline fun <reified T : Exception> on(handler: HttpHandler) {
+        on(T::class, object : SuspendingHttpHandler {
+            override suspend fun handleRequest(exchange: HttpServerExchange) {
+                handler.handleRequest(exchange)
+            }
+        })
+    }
+
+    inline fun <reified T : Exception> on(noinline handler: suspend (HttpServerExchange) -> Unit) {
+        on(T::class, object : SuspendingHttpHandler {
+            override suspend fun handleRequest(exchange: HttpServerExchange) {
+                handler.invoke(exchange)
+            }
+        })
+    }
 }
