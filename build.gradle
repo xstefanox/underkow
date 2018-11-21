@@ -6,7 +6,8 @@ buildscript {
             slf4j      : '1.7.25',
             restassured: '3.2.0',
             mockk      : '1.8.13.kotlin13',
-            coroutines : '1.0.1'
+            coroutines : '1.0.1',
+            klaxon     : '2.0.11',
     ]
 }
 
@@ -24,6 +25,20 @@ repositories {
     jcenter()
 }
 
+sourceSets {
+    example {
+        kotlin {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+    }
+}
+
+configurations {
+    exampleImplementation.extendsFrom testImplementation
+    exampleRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
 dependencies {
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: v.kotlin
@@ -35,6 +50,8 @@ dependencies {
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: v.restassured
     testImplementation group: 'io.mockk', name: 'mockk', version: v.mockk
+
+    exampleImplementation group: 'com.beust', name: 'klaxon', version: v.klaxon
 }
 
 configurations.all {
