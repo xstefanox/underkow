@@ -1,3 +1,12 @@
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
+import static java.time.ZoneOffset.UTC
+
 buildscript {
     ext.v = [
             kotlin     : '1.3.10',
@@ -103,7 +112,14 @@ task javadocJar(type: org.gradle.jvm.tasks.Jar) {
     from dokka
 }
 
-build.dependsOn sourcesJar, javadocJar
+jar.dependsOn sourcesJar, javadocJar
 
 group 'io.github.xstefanox'
-version = findProperty('project.version') ?: '1.0.0-SNAPSHOT'
+
+if (hasProperty('project.version')) {
+    version = findProperty('project.version')
+} else {
+    def now = OffsetDateTime.now(UTC)
+    def formatter = DateTimeFormatter.ofPattern('uMMdd-HHmmss')
+    version = formatter.format(now)
+}
