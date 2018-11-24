@@ -1,15 +1,15 @@
 language: java
 
-jdk:
-  - oraclejdk8
-  - openjdk8
-
 jobs:
   include:
     - stage: build
-      jdk: oraclejdk8
+      jdk:
+       - oraclejdk8
       script: ./gradlew build
     - stage: test
+      jdk:
+        - oraclejdk8
+        - openjdk8
       script: ./gradlew check
 
 stages:
