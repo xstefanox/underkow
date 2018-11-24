@@ -18,10 +18,11 @@ jobs:
       jdk: oraclejdk11
       install: skip
       script: ./gradlew check
-    - stage: test
-      jdk: openjdk7
-      install: skip
-      script: ./gradlew check
+## not working on openjdk7
+#    - stage: test
+#      jdk: openjdk7
+#      install: skip
+#      script: ./gradlew check
     - stage: test
       jdk: openjdk8
       install: skip
