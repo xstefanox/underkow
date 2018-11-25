@@ -111,19 +111,11 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
     }
 
     private fun addHandler(method: HttpString, template: String, handler: HttpHandler) {
-        addHandler(method, template, object : SuspendingHttpHandler {
-            override suspend fun handleRequest(exchange: HttpServerExchange) {
-                handler.handleRequest(exchange)
-            }
-        })
+        addHandler(method, template, HttpHandlerAdapter(handler))
     }
 
     private fun addHandler(method: HttpString, template: String, handler: suspend (HttpServerExchange) -> Unit) {
-        addHandler(method, template, object : SuspendingHttpHandler {
-            override suspend fun handleRequest(exchange: HttpServerExchange) {
-                handler.invoke(exchange)
-            }
-        })
+        addHandler(method, template, FunctionHandlerAdapter(handler))
     }
 
     fun on(exception: KClass<out Exception>, handler: SuspendingHttpHandler) {
@@ -135,18 +127,10 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
     }
 
     inline fun <reified T : Exception> on(handler: HttpHandler) {
-        on(T::class, object : SuspendingHttpHandler {
-            override suspend fun handleRequest(exchange: HttpServerExchange) {
-                handler.handleRequest(exchange)
-            }
-        })
+        on(T::class, HttpHandlerAdapter(handler))
     }
 
     inline fun <reified T : Exception> on(noinline handler: suspend (HttpServerExchange) -> Unit) {
-        on(T::class, object : SuspendingHttpHandler {
-            override suspend fun handleRequest(exchange: HttpServerExchange) {
-                handler.invoke(exchange)
-            }
-        })
+        on(T::class, FunctionHandlerAdapter(handler))
     }
 }
