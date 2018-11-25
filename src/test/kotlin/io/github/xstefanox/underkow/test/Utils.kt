@@ -75,6 +75,23 @@ fun SuspendingHttpHandler.throwing(throwable: Throwable): SuspendingHttpHandler 
     return this
 }
 
+fun HttpServerExchange.requesting(method: HttpString, path: String): HttpServerExchange {
+
+    every {
+        requestMethod
+    } answers {
+        method
+    }
+
+    every {
+        relativePath
+    } answers {
+        path
+    }
+
+    return this
+}
+
 /**
  * Return a simple [HttpHandler] mock that executes without actually doing nothing.
  */

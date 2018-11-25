@@ -18,13 +18,23 @@ import kotlin.reflect.KClass
 
 private val UNHANDLED_EXCEPTION_HANDLER = UnhandledExceptionHandler()
 
-class RoutingBuilder(private val prefix: String = "", private val filters: Collection<SuspendingHttpHandler> = emptyList()) {
+class RoutingBuilder(prefix: String = "", private val filters: Collection<SuspendingHttpHandler> = emptyList()) {
 
     private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
+
+    private val prefix: String = prefix.trim()
 
     private val templates = mutableMapOf<String, MutableMap<HttpString, SuspendingHttpHandler>>()
 
     private val paths = mutableListOf<RoutingHandler>()
+
+    private val exceptions = mutableMapOf<KClass<out Throwable>, SuspendingHttpHandler>()
+
+    init {
+        require(this.prefix.isEmpty() || this.prefix.isNotBlank()) {
+            "prefix must not be blank"
+        }
+    }
 
     fun get(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(GET, template, handler)
 
@@ -75,14 +85,23 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
     }
 
     fun path(prefix: String, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
+
+        require(prefix.isNotBlank()) {
+            "prefix must not be blank"
+        }
+
         paths += RoutingBuilder(
-            this.prefix + prefix,
+            this.prefix + prefix.trim(),
             this.filters + filters.toList())
             .apply(init)
             .build()
     }
 
     private fun addHandler(method: HttpString, template: String, handler: SuspendingHttpHandler) {
+
+        require(template.isEmpty() || template.isNotBlank()) {
+            "prefix must not be blank"
+        }
 
         val pathHandlers = templates.computeIfAbsent(prefix + template) {
             mutableMapOf()
@@ -106,8 +125,6 @@ class RoutingBuilder(private val prefix: String = "", private val filters: Colle
             }
         })
     }
-
-    private val exceptions = mutableMapOf<KClass<out Throwable>, SuspendingHttpHandler>()
 
     fun on(exception: KClass<out Exception>, handler: SuspendingHttpHandler) {
         exceptions[exception] = handler
