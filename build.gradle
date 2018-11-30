@@ -21,6 +21,7 @@ plugins {
     id 'org.jlleitschuh.gradle.ktlint' version '6.3.0'
     id 'com.github.ben-manes.versions' version '0.20.0'
     id 'org.jetbrains.dokka' version '0.9.17'
+    id 'signing'
 }
 
 repositories {
@@ -108,7 +109,15 @@ task javadocJar(type: org.gradle.jvm.tasks.Jar) {
     from dokka
 }
 
-jar.dependsOn sourcesJar, javadocJar
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+signing {
+    useGpgCmd()
+    sign configurations.archives
+}
 
 group 'io.github.xstefanox'
 
