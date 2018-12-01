@@ -1,8 +1,3 @@
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
-
-import static java.time.ZoneOffset.UTC
-
 buildscript {
     ext.v = [
             kotlin     : '1.3.10',
@@ -126,19 +121,19 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
 //            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-//                authentication(userName: nexus.username, password:  nexus.password)
+//                authentication(userName: nexusUsername, password: nexusPassword)
 //            }
 //
 //            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-//                authentication(userName:  nexus.username, password:  nexus.assword)
+//                authentication(userName:  nexusUsername, password: nexusPassword)
 //            }
 
             repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
-                authentication(userName: "admin", password: "admin123")
+                authentication(userName: nexusUsername, password: nexusPassword)
             }
 
             snapshotRepository(url: "http://localhost:8081/nexus/content/repositories/snapshots/") {
-                authentication(userName: "admin", password: "admin123")
+                authentication(userName: nexusUsername, password: nexusPassword)
             }
 
             pom.project {
@@ -173,11 +168,8 @@ uploadArchives {
 }
 
 group 'io.github.xstefanox'
+version 'SNAPSHOT'
 
-if (hasProperty('project.version')) {
-    version = findProperty('project.version')
-} else {
-    def now = OffsetDateTime.now(UTC)
-    def formatter = DateTimeFormatter.ofPattern('uMMdd-HHmmss')
-    version = formatter.format(now) + '-SNAPSHOT'
+if (hasProperty('release')) {
+    version = findProperty('release')
 }
