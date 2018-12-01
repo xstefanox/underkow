@@ -6,6 +6,10 @@ jobs:
       install: "./gradlew jar"
       script: skip
     - stage: test
+      jdk: oraclejdk8
+      install: skip
+      script: "./gradlew check"
+    - stage: test
       jdk: oraclejdk9
       install: skip
       script: "./gradlew check"
@@ -17,18 +21,6 @@ jobs:
       jdk: openjdk8
       install: skip
       script: "./gradlew check"
-    - stage: test
-      jdk: oraclejdk8
-      install: skip
-      script: "./gradlew check"
 stages:
   - build
   - test
-deploy:
-  provider: script
-  script: "./gradlew uploadArchives -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD}"
-  skip_cleanup: true
-env:
-  global:
-    - secure: OiJ0d72IJ0HFBdXxifuXsBJJg5zUBQXB+9NkKPINHVRJoigInvsWeEb/Fo+a86X4+KoiimPuaAsGVV5zque1F7EOtevbFhTW+7pgk1hFUlOs+cCv2Csz9Ct8C8UATpMu7oq3OvFfz6j1B5FJOKnsy7I1Aw49HQTJ5HKmkgxRX84JJqr4qxvqfAEWiD3q8iqoivbVDAc4OT2m6ZqsBW6qO3Bp4u2cuQ/rq6EkL+++mZt7Yb7QyZ4k+XgvEt2EbMmPuN0yrippRqGEw3bdCraM3ZsczCmNolcA2Yq/xxsVViGkYXW+fU62CSdnx9xE9IaK26iIohOe6uCXbf4Nmb+4io0PNs7TaTd9OwjWlkVa0oVllHehTjonrY/KTgDJBFbM9zx/8NSzHo34mGEYNgoZB78Il7pXGJJK9HaJ6Z7g4FnVgNijZvYu9kqMBnRt4F1cDcNrUQhBofXw5u1r5aJ3DVhVlQnimgp/a9qHLqTMy238M4Ez2Z+9J2A0FLkbH8e3Z4iNpZa5OrVIjZa71Kf1/uBPcvozEocAexmze14BMuDAhuoo2ZPyI1qTCIeYXVKXO3u/k/9ne8/tFfkA6gwWXRKURUVZbG0stU2XsT+fYutQtTqDy84gXqpU08xVkiKw7SaLoswqaHjYcYQUoTxIsJ2371w48hjBpWWtZCxMwJU=
-    - secure: DBfcTHFIo8q+wup0BtggcBuqrXda7Gt5aO8UOOS4xIHz4m3OrXX1NGX7KvIpdy+LctYEvw0kP1HeBgPqOeaDs7TrtwmD+Z2aYfgNDKP4DIv8BfYgg8oKbaYf5xQna8MIPWCPm9camMoUclgsMfGkmQl2z4Bz3m4RdDVrKkep0rVUIjyOSOHCZRIVt5IypPS+cYISPgfE8C2aFRiYlgXoE6YX/B/3cqz2MPmKNmviverMTKuJPnjIcVJq/wlplbCE87E7YNQJCj9+LCuC5WwiwLfRkel2u/yg/Ix+SuiFLxnP4QMOnHcliwkFpyK2EucaFWFms3JQL41Wa23uLeUhNH3JL0BfJyxi7GIONsAPRgInS++MGdYFVz0Tmxk5VXOsyJmmz5Xq/zWIktwQN2/IDUtxQys0byE/OpHd8/CtvWoqXaV0GyITAeJpUHhlatjlMaWvwjCdK7gp4AIilCbz/nRnSfjzfQfLW+SyMBqQ8eHN6mQXGhsH+jyvkoDU4twxkoIUhOFaGLgveCvoB/HECrQxNNP26gtB+cPNBD9rZ1iGPZDX98e29Lq6EkpetPLRdYMMhvumCdYM6L5ZKf5melnkOuTs8jlQ0G3Sc24glgq9uD5w0NvA7+OX+avZzhdrRrZs0NGwBbHWmctbtN6GoCsVHRGJQ+yMEKupUXiirJ8=
