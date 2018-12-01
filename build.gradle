@@ -22,6 +22,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.20.0'
     id 'org.jetbrains.dokka' version '0.9.17'
     id 'signing'
+    id 'maven'
 }
 
 repositories {
@@ -119,6 +120,58 @@ signing {
     sign configurations.archives
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+//            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: nexus.username, password:  nexus.password)
+//            }
+//
+//            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName:  nexus.username, password:  nexus.assword)
+//            }
+
+            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+
+            snapshotRepository(url: "http://localhost:8081/nexus/content/repositories/snapshots/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+
+            pom.project {
+                name = 'Underkow'
+                packaging 'jar'
+                description 'A Kotlin DSL to configure Undertow routing'
+                url 'https://github.com/xstefanox/underkow'
+
+                scm {
+                    connection 'scm:https://github.com/xstefanox/underkow.git'
+                    developerConnection 'scm:https://github.com/xstefanox/underkow.git'
+                    url 'https://github.com/xstefanox/underkow'
+                }
+
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'xstefanox'
+                        name = 'Stefano Varesi'
+                        email 'stefano.varesi@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
 group 'io.github.xstefanox'
 
 if (hasProperty('project.version')) {
@@ -126,5 +179,5 @@ if (hasProperty('project.version')) {
 } else {
     def now = OffsetDateTime.now(UTC)
     def formatter = DateTimeFormatter.ofPattern('uMMdd-HHmmss')
-    version = formatter.format(now)
+    version = formatter.format(now) + '-SNAPSHOT'
 }
