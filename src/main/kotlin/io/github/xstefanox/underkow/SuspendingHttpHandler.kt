@@ -7,5 +7,10 @@ import io.undertow.server.HttpServerExchange
  */
 interface SuspendingHttpHandler {
 
+    /**
+     * Handle the request.
+     *
+     * @param exchange the HTTP request/response exchange.
+     */
     suspend fun handleRequest(exchange: HttpServerExchange)
 }

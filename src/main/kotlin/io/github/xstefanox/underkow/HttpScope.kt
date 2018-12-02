@@ -9,6 +9,9 @@ import kotlin.coroutines.CoroutineContext
  */
 object HttpScope : CoroutineScope {
 
+    /**
+     * The [CoroutineContext] used to execute the coroutines.
+     */
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 }

@@ -1,3 +1,5 @@
+@file:JvmName("Extensions")
+
 package io.github.xstefanox.underkow.chain
 
 import io.undertow.server.HttpServerExchange
