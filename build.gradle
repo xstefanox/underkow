@@ -137,7 +137,7 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            repository(url: "https://oss.sonatype.org/content/repositories/releases/") {
                 authentication(userName: findProperty('nexusUsername'), password: findProperty('nexusPassword'))
             }
 
