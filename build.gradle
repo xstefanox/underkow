@@ -19,6 +19,7 @@ plugins {
     id 'org.jetbrains.dokka' version '0.9.17'
     id 'signing'
     id 'maven'
+    id 'java-library'
 }
 
 repositories {
@@ -43,8 +44,8 @@ dependencies {
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: v.kotlin
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: v.coroutines
-    implementation group: 'io.undertow', name: 'undertow-core', version: v.undertow
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
+    api group: 'io.undertow', name: 'undertow-core', version: v.undertow
+    api group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
 
     testImplementation group: 'io.kotlintest', name: 'kotlintest-runner-junit5', version: v.kotlintest
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j

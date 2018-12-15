@@ -18,6 +18,8 @@ import kotlin.reflect.KClass
 
 private val UNHANDLED_EXCEPTION_HANDLER = UnhandledExceptionHandler()
 
+private const val BLANK_PREFIX_REQUIREMENT_MESSAGE = "prefix must not be blank"
+
 /**
  * The builder used to configure the server routing.
  *
@@ -39,7 +41,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
 
     init {
         require(this.prefix.isEmpty() || this.prefix.isNotBlank()) {
-            "prefix must not be blank"
+            BLANK_PREFIX_REQUIREMENT_MESSAGE
         }
     }
 
@@ -49,7 +51,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun get(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(GET, template, handler)
+    fun get(template: String = "", handler: suspend (HttpServerExchange) -> Unit) = addHandler(GET, template, handler)
 
     /**
      * Add a new GET route to the list of routes configured by this builder.
@@ -57,7 +59,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun get(template: String, handler: SuspendingHttpHandler) = addHandler(GET, template, handler)
+    fun get(template: String = "", handler: SuspendingHttpHandler) = addHandler(GET, template, handler)
 
     /**
      * Add a new GET route to the list of routes configured by this builder.
@@ -65,7 +67,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun get(template: String, handler: HttpHandler) = addHandler(GET, template, handler)
+    fun get(template: String = "", handler: HttpHandler) = addHandler(GET, template, handler)
 
     /**
      * Add a new POST route to the list of routes configured by this builder.
@@ -73,7 +75,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun post(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(POST, template, handler)
+    fun post(template: String = "", handler: suspend (HttpServerExchange) -> Unit) = addHandler(POST, template, handler)
 
     /**
      * Add a new POST route to the list of routes configured by this builder.
@@ -81,7 +83,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun post(template: String, handler: SuspendingHttpHandler) = addHandler(POST, template, handler)
+    fun post(template: String = "", handler: SuspendingHttpHandler) = addHandler(POST, template, handler)
 
     /**
      * Add a new POST route to the list of routes configured by this builder.
@@ -89,7 +91,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun post(template: String, handler: HttpHandler) = addHandler(POST, template, handler)
+    fun post(template: String = "", handler: HttpHandler) = addHandler(POST, template, handler)
 
     /**
      * Add a new PUT route to the list of routes configured by this builder.
@@ -97,7 +99,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun put(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(PUT, template, handler)
+    fun put(template: String = "", handler: suspend (HttpServerExchange) -> Unit) = addHandler(PUT, template, handler)
 
     /**
      * Add a new PUT route to the list of routes configured by this builder.
@@ -105,7 +107,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun put(template: String, handler: SuspendingHttpHandler) = addHandler(PUT, template, handler)
+    fun put(template: String = "", handler: SuspendingHttpHandler) = addHandler(PUT, template, handler)
 
     /**
      * Add a new PUT route to the list of routes configured by this builder.
@@ -113,7 +115,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun put(template: String, handler: HttpHandler) = addHandler(PUT, template, handler)
+    fun put(template: String = "", handler: HttpHandler) = addHandler(PUT, template, handler)
 
     /**
      * Add a new PATCH route to the list of routes configured by this builder.
@@ -121,7 +123,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun patch(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(PATCH, template, handler)
+    fun patch(template: String = "", handler: suspend (HttpServerExchange) -> Unit) = addHandler(PATCH, template, handler)
 
     /**
      * Add a new PATCH route to the list of routes configured by this builder.
@@ -129,7 +131,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun patch(template: String, handler: SuspendingHttpHandler) = addHandler(PATCH, template, handler)
+    fun patch(template: String = "", handler: SuspendingHttpHandler) = addHandler(PATCH, template, handler)
 
     /**
      * Add a new PATCH route to the list of routes configured by this builder.
@@ -137,7 +139,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun patch(template: String, handler: HttpHandler) = addHandler(PATCH, template, handler)
+    fun patch(template: String = "", handler: HttpHandler) = addHandler(PATCH, template, handler)
 
     /**
      * Add a new DELETE route to the list of routes configured by this builder.
@@ -145,7 +147,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun delete(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(DELETE, template, handler)
+    fun delete(template: String = "", handler: suspend (HttpServerExchange) -> Unit) = addHandler(DELETE, template, handler)
 
     /**
      * Add a new DELETE route to the list of routes configured by this builder.
@@ -153,7 +155,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun delete(template: String, handler: SuspendingHttpHandler) = addHandler(DELETE, template, handler)
+    fun delete(template: String = "", handler: SuspendingHttpHandler) = addHandler(DELETE, template, handler)
 
     /**
      * Add a new DELETE route to the list of routes configured by this builder.
@@ -161,7 +163,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun delete(template: String, handler: HttpHandler) = addHandler(DELETE, template, handler)
+    fun delete(template: String = "", handler: HttpHandler) = addHandler(DELETE, template, handler)
 
     /**
      * Build a new [RoutingHandler] from this builder.
@@ -198,7 +200,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
     fun path(prefix: String, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
 
         require(prefix.isNotBlank()) {
-            "prefix must not be blank"
+            BLANK_PREFIX_REQUIREMENT_MESSAGE
         }
 
         paths += RoutingBuilder(
@@ -253,7 +255,7 @@ class RoutingBuilder(prefix: String = "", private val filters: Collection<Suspen
     private fun addHandler(method: HttpString, template: String, handler: SuspendingHttpHandler) {
 
         require(template.isEmpty() || template.isNotBlank()) {
-            "prefix must not be blank"
+            BLANK_PREFIX_REQUIREMENT_MESSAGE
         }
 
         val pathHandlers = templates.computeIfAbsent(prefix + template) {

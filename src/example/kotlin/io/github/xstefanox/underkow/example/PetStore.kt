@@ -41,7 +41,7 @@ fun main() {
     undertow(8181) {
         path("/pets", requestLogger) {
 
-            get("") { exchange ->
+            get { exchange ->
                 exchange.send(OK, CollectionResponse(pets.values))
             }
 
@@ -56,7 +56,7 @@ fun main() {
                 }
             }
 
-            post("") { exchange ->
+            post { exchange ->
 
                 exchange.requestReceiver.receiveFullString { _, body ->
 
