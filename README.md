@@ -1,4 +1,8 @@
-# Underkow [![Build Status](https://travis-ci.com/xstefanox/underkow.svg?branch=master)](https://travis-ci.com/xstefanox/underkow) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# Underkow
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.xstefanox/underkow/badge.svg)](https://search.maven.org/search?q=a:underkow)
+[![Build Status](https://travis-ci.com/xstefanox/underkow.svg?branch=master)](https://travis-ci.com/xstefanox/underkow)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 _A Kotlin declarative DSL for Undertow routing configuration_
 
