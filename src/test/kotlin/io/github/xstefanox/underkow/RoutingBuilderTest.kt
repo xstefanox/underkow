@@ -164,4 +164,19 @@ class RoutingBuilderTest : StringSpec({
             routingBuilder.path(" ") {}
         }
     }
+
+    "routing definition evaluation should happen on builder completion only" {
+
+        class TestException : Exception()
+
+        val routingBuilder = RoutingBuilder()
+
+        routingBuilder.path("/test") {
+            throw TestException()
+        }
+
+        shouldThrow<TestException> {
+            routingBuilder.build()
+        }
+    }
 })

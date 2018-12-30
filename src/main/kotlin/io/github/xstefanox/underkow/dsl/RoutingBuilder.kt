@@ -9,11 +9,11 @@ import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
 import io.undertow.util.HttpString
+import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
+import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
-import io.undertow.util.Methods.PATCH
-import io.undertow.util.Methods.DELETE
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
@@ -33,7 +33,7 @@ class RoutingBuilder(prefix: String = DEFAULT_PREFIX, private val filters: Colle
 
     private val templates = mutableMapOf<String, MutableMap<HttpString, SuspendingHttpHandler>>()
 
-    private val paths = mutableListOf<RoutingHandler>()
+    private val paths = mutableListOf<RouteInitializer>()
 
     private val exceptions = mutableMapOf<KClass<out Throwable>, SuspendingHttpHandler>()
 
@@ -179,11 +179,11 @@ class RoutingBuilder(prefix: String = DEFAULT_PREFIX, private val filters: Colle
             BLANK_PREFIX_REQUIREMENT_MESSAGE
         }
 
-        paths += RoutingBuilder(
+        val routingBuilder = RoutingBuilder(
             this.prefix + prefix.trim(),
             this.filters + filters.toList())
-            .apply(init)
-            .build()
+
+        paths += RouteInitializer(routingBuilder, init)
     }
 
     /**
@@ -245,7 +245,7 @@ class RoutingBuilder(prefix: String = DEFAULT_PREFIX, private val filters: Colle
         }
 
         paths.forEach { group ->
-            routingHandler.addAll(group)
+            routingHandler.addAll(group.build())
         }
 
         return routingHandler

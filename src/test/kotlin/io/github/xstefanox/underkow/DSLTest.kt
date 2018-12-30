@@ -16,6 +16,7 @@ import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
 import io.undertow.util.StatusCodes.INTERNAL_SERVER_ERROR
+import io.undertow.util.StatusCodes.NOT_FOUND
 import io.undertow.util.StatusCodes.OK
 
 class DSLTest : StringSpec({
@@ -888,6 +889,37 @@ class DSLTest : StringSpec({
 
         coVerify {
             testException1Handler.handleRequest(any())
+        }
+    }
+
+    "routing definition should be overridden if defined multiple times" {
+
+        val handler = mockHandler()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing("/overridden") {
+                get("/invalid", handler)
+            }
+
+            routing {
+                get("/valid", handler)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/overridden/invalid",
+                expect = NOT_FOUND
+            )
+
+            request(
+                method = GET,
+                path = "/valid",
+                expect = OK
+            )
         }
     }
 })

@@ -24,7 +24,7 @@ class ServerBuilder(
      */
     var host: String = DEFAULT_HOST
 
-    private var routingBuilder: RoutingBuilder? = null
+    private var routeInitializer: RouteInitializer? = null
 
     /**
      * Begin the definition of the server routing. Every call to this method overwrites a previously defined routing, if
@@ -35,7 +35,7 @@ class ServerBuilder(
      * @param init the lambda function used to configure the routing.
      */
     fun routing(prefix: String = DEFAULT_PREFIX, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
-        routingBuilder = RoutingBuilder(prefix, filters.toList()).apply(init)
+        routeInitializer = RouteInitializer(RoutingBuilder(prefix, filters.toList()), init)
     }
 
     /**
@@ -44,7 +44,7 @@ class ServerBuilder(
      * @return an [Undertow] server configured with the DSL defined by this builder.
      */
     fun build(): Undertow = Undertow.builder()
-        .setHandler(routingBuilder?.build())
+        .setHandler(routeInitializer?.build())
         .addHttpListener(port, host)
         .build()
 }
