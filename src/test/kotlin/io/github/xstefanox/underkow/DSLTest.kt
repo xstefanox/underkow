@@ -26,7 +26,8 @@ class DSLTest : StringSpec({
 
     "Undertow DSL builder should return an Undertow instance" {
 
-        val undertow = undertow(TEST_HTTP_PORT) {
+        val undertow = undertow {
+            port = TEST_HTTP_PORT
         }
 
         try {
@@ -40,8 +41,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -58,9 +62,12 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test") {
-                httpHandler.handleRequest(it)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test") {
+                    httpHandler.handleRequest(it)
+                }
             }
         } assert {
 
@@ -78,8 +85,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -94,8 +104,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            post("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                post("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -112,9 +125,12 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            post("/test") {
-                httpHandler.handleRequest(it)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                post("/test") {
+                    httpHandler.handleRequest(it)
+                }
             }
         } assert {
 
@@ -132,8 +148,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            post("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                post("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -148,8 +167,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            put("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                put("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -166,9 +188,12 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            put("/test") {
-                httpHandler.handleRequest(it)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                put("/test") {
+                    httpHandler.handleRequest(it)
+                }
             }
         } assert {
 
@@ -186,8 +211,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            put("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                put("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -202,8 +230,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            patch("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                patch("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -220,9 +251,12 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            patch("/test") {
-                httpHandler.handleRequest(it)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                patch("/test") {
+                    httpHandler.handleRequest(it)
+                }
             }
         } assert {
 
@@ -240,8 +274,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            patch("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                patch("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -256,8 +293,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            delete("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                delete("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -274,10 +314,12 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-
-            delete("/test") {
-                httpHandler.handleRequest(it)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                delete("/test") {
+                    httpHandler.handleRequest(it)
+                }
             }
         } assert {
 
@@ -295,8 +337,11 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            delete("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                delete("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -312,13 +357,18 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix") {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
+            routing {
 
-                get("/test2", httpHandler2)
+                path("/prefix") {
+
+                    get("/test1", httpHandler1)
+
+                    get("/test2", httpHandler2)
+                }
             }
         } assert {
 
@@ -344,16 +394,21 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix1") {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
-            }
+            routing {
 
-            path("/prefix2") {
+                path("/prefix1") {
 
-                get("/test2", httpHandler2)
+                    get("/test1", httpHandler1)
+                }
+
+                path("/prefix2") {
+
+                    get("/test2", httpHandler2)
+                }
             }
         } assert {
 
@@ -379,15 +434,20 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix1") {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
+            routing {
 
-                path("/prefix2") {
+                path("/prefix1") {
 
-                    get("/test2", httpHandler2)
+                    get("/test1", httpHandler1)
+
+                    path("/prefix2") {
+
+                        get("/test2", httpHandler2)
+                    }
                 }
             }
         } assert {
@@ -414,16 +474,21 @@ class DSLTest : StringSpec({
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
 
-        undertow(TEST_HTTP_PORT, base = "/base") {
+        undertow {
 
-            path("/prefix1") {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
-            }
+            routing("/base") {
 
-            path("/prefix2") {
+                path("/prefix1") {
 
-                get("/test2", httpHandler2)
+                    get("/test1", httpHandler1)
+                }
+
+                path("/prefix2") {
+
+                    get("/test2", httpHandler2)
+                }
             }
         } assert {
 
@@ -449,10 +514,13 @@ class DSLTest : StringSpec({
         val httpHandler = mockHandler()
         val filter = mockFilter()
 
-        undertow(TEST_HTTP_PORT) {
-            path("/prefix", filter) {
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/prefix", filter) {
 
-                get("/test", httpHandler)
+                    get("/test", httpHandler)
+                }
             }
         } assert {
 
@@ -475,14 +543,19 @@ class DSLTest : StringSpec({
         val httpHandler2 = mockHandler()
         val filter = mockFilter()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix", filter) {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
+            routing {
+
+                path("/prefix", filter) {
+
+                    get("/test1", httpHandler1)
+                }
+
+                get("/test2", httpHandler2)
             }
-
-            get("/test2", httpHandler2)
         } assert {
 
             request(
@@ -504,19 +577,24 @@ class DSLTest : StringSpec({
         val httpHandler3 = mockHandler()
         val filter1 = mockFilter()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix1", filter1) {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
+            routing {
 
-                path("/prefix2") {
+                path("/prefix1", filter1) {
 
-                    get("/test2", httpHandler2)
+                    get("/test1", httpHandler1)
+
+                    path("/prefix2") {
+
+                        get("/test2", httpHandler2)
+                    }
                 }
-            }
 
-            get("/test3", httpHandler3)
+                get("/test3", httpHandler3)
+            }
         } assert {
 
             request(
@@ -543,19 +621,24 @@ class DSLTest : StringSpec({
         val filter1 = mockFilter()
         val filter2 = mockFilter()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix1", filter1) {
+            port = TEST_HTTP_PORT
 
-                get("/test1", httpHandler1)
+            routing {
 
-                path("/prefix2", filter2) {
+                path("/prefix1", filter1) {
 
-                    get("/test2", httpHandler2)
+                    get("/test1", httpHandler1)
+
+                    path("/prefix2", filter2) {
+
+                        get("/test2", httpHandler2)
+                    }
                 }
-            }
 
-            get("/test3", httpHandler3)
+                get("/test3", httpHandler3)
+            }
         } assert {
 
             request(
@@ -581,11 +664,16 @@ class DSLTest : StringSpec({
         val filter2 = mockFilter()
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix", filter1, filter2) {
+            port = TEST_HTTP_PORT
 
-                get("/test", httpHandler)
+            routing {
+
+                path("/prefix", filter1, filter2) {
+
+                    get("/test", httpHandler)
+                }
             }
         } assert {
 
@@ -607,12 +695,15 @@ class DSLTest : StringSpec({
 
         val httpHandler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", httpHandler)
-            post("/test", httpHandler)
-            put("/test", httpHandler)
-            patch("/test", httpHandler)
-            delete("/test", httpHandler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", httpHandler)
+                post("/test", httpHandler)
+                put("/test", httpHandler)
+                patch("/test", httpHandler)
+                delete("/test", httpHandler)
+            }
         } assert {
 
             request(
@@ -652,9 +743,12 @@ class DSLTest : StringSpec({
         val handler = mockHandler().throwing(TestException1())
         val testException1Handler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", handler)
-            on<TestException1>(testException1Handler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", handler)
+                on<TestException1>(testException1Handler)
+            }
         } assert {
 
             request(
@@ -673,8 +767,14 @@ class DSLTest : StringSpec({
 
         val handler = mockHandler().throwing(TestException1())
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", handler)
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing {
+
+                get("/test", handler)
+            }
         } assert {
             request(
                 method = GET,
@@ -689,9 +789,12 @@ class DSLTest : StringSpec({
         val handler = mockHandler().throwing(TestException1())
         val testException2Handler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", handler)
-            on<TestException2>(testException2Handler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", handler)
+                on<TestException2>(testException2Handler)
+            }
         } assert {
             request(
                 method = GET,
@@ -707,13 +810,18 @@ class DSLTest : StringSpec({
         val handler2 = mockHandler().throwing(TestException1())
         val testException1Handler = mockHandler()
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            get("/test1", handler1)
+            port = TEST_HTTP_PORT
 
-            path("/prefix2") {
-                get("/test2", handler2)
-                on<TestException1>(testException1Handler)
+            routing {
+
+                get("/test1", handler1)
+
+                path("/prefix2") {
+                    get("/test2", handler2)
+                    on<TestException1>(testException1Handler)
+                }
             }
         } assert {
 
@@ -736,9 +844,12 @@ class DSLTest : StringSpec({
         val handler = mockHandler().throwing(TestException1())
         val testException1Handler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", handler)
-            on<TestException1>(testException1Handler)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", handler)
+                on<TestException1>(testException1Handler)
+            }
         } assert {
 
             request(
@@ -758,10 +869,13 @@ class DSLTest : StringSpec({
         val handler = mockHandler().throwing(TestException1())
         val testException1Handler = mockStandardHandler()
 
-        undertow(TEST_HTTP_PORT) {
-            get("/test", handler)
-            on<TestException1> {
-                testException1Handler.handleRequest(it)
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                get("/test", handler)
+                on<TestException1> {
+                    testException1Handler.handleRequest(it)
+                }
             }
         } assert {
 

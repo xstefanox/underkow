@@ -25,13 +25,18 @@ class CoroutineSupportTest : StringSpec({
 
     "handlers could be implemented with suspending functions" {
 
-        undertow(TEST_HTTP_PORT) {
+        undertow {
 
-            path("/prefix") {
+            port = TEST_HTTP_PORT
 
-                get("/test") {
-                    val result = doSomethingSuspending()
-                    it.responseSender.send(result)
+            routing {
+
+                path("/prefix") {
+
+                    get("/test") {
+                        val result = doSomethingSuspending()
+                        it.responseSender.send(result)
+                    }
                 }
             }
         } assert {

@@ -38,61 +38,67 @@ fun main() {
     val pets = mutableMapOf<PetId, Pet>()
     val petNames = mutableMapOf<String, Pet>()
 
-    undertow(8181) {
-        path("/pets", requestLogger) {
+    undertow {
 
-            get { exchange ->
-                exchange.send(OK, CollectionResponse(pets.values))
-            }
+        port = 8181
 
-            get("/{id}") { exchange ->
+        routing {
 
-                val pet = pets[exchange.petId]
+            path("/pets", requestLogger) {
 
-                if (pet != null) {
-                    exchange.send(OK, pet)
-                } else {
-                    exchange.send(NOT_FOUND)
+                get { exchange ->
+                    exchange.send(OK, CollectionResponse(pets.values))
                 }
-            }
 
-            post { exchange ->
+                get("/{id}") { exchange ->
 
-                exchange.requestReceiver.receiveFullString { _, body ->
+                    val pet = pets[exchange.petId]
 
-                    val name = (json.parse<PetPost>(body) ?: throw RuntimeException()).name
-                    val pet = Pet(PetId(), name)
+                    if (pet != null) {
+                        exchange.send(OK, pet)
+                    } else {
+                        exchange.send(NOT_FOUND)
+                    }
+                }
 
-                    if (petNames.putIfAbsent(name, pet) != null) {
-                        exchange.send(BAD_REQUEST, """
+                post { exchange ->
+
+                    exchange.requestReceiver.receiveFullString { _, body ->
+
+                        val name = (json.parse<PetPost>(body) ?: throw RuntimeException()).name
+                        val pet = Pet(PetId(), name)
+
+                        if (petNames.putIfAbsent(name, pet) != null) {
+                            exchange.send(BAD_REQUEST, """
                             {
                                 "message": "a pet with name '$name' already exists"
                             }
                         """.trimIndent())
-                    } else {
+                        } else {
 
-                        logger.info("creating pet $pet")
-                        pets[pet.id] = pet
-                        logger.info("$pet created")
+                            logger.info("creating pet $pet")
+                            pets[pet.id] = pet
+                            logger.info("$pet created")
 
-                        exchange.send(CREATED, pet)
+                            exchange.send(CREATED, pet)
+                        }
                     }
                 }
-            }
 
-            delete("/{id}") { exchange ->
+                delete("/{id}") { exchange ->
 
-                if (pets.containsKey(exchange.petId)) {
+                    if (pets.containsKey(exchange.petId)) {
 
-                    logger.info("deleting pet ${exchange.petId}")
-                    val pet = pets.remove(exchange.petId)
-                    petNames.remove(pet!!.name)
-                    logger.info("$pet deleted")
+                        logger.info("deleting pet ${exchange.petId}")
+                        val pet = pets.remove(exchange.petId)
+                        petNames.remove(pet!!.name)
+                        logger.info("$pet deleted")
 
-                    exchange.send(OK, pet)
+                        exchange.send(OK, pet)
 
-                } else {
-                    exchange.send(NOT_FOUND)
+                    } else {
+                        exchange.send(NOT_FOUND)
+                    }
                 }
             }
         }

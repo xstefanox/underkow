@@ -1,5 +1,6 @@
 package io.github.xstefanox.underkow
 
+import io.github.xstefanox.underkow.dsl.RoutingBuilder
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.requesting
@@ -7,16 +8,9 @@ import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import io.mockk.verify
-import io.undertow.server.RoutingHandler
 import io.undertow.util.Methods.GET
 
 class RoutingBuilderTest : StringSpec({
-
-    fun RoutingBuilder.respondingTo(path: String): RoutingHandler {
-        return apply {
-            get(path) {}
-        }.build()
-    }
 
     "routing builder should produce a new object on every execution" {
 
@@ -33,7 +27,10 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder("").respondingTo("")
+        val handler = RoutingBuilder().apply {
+            get("") {}
+        }.build()
+
         handler.fallbackHandler = fallbackHandler
 
         handler.handleRequest(exchange)
@@ -46,7 +43,10 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder(" ").respondingTo("")
+        val handler = RoutingBuilder(" ").apply {
+            get("") {}
+        }.build()
+
         handler.fallbackHandler = fallbackHandler
 
         handler.handleRequest(exchange)
@@ -59,7 +59,10 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder(" /prefix").respondingTo("")
+        val handler = RoutingBuilder(" /prefix").apply {
+            get("") {}
+        }.build()
+
         handler.fallbackHandler = fallbackHandler
 
         handler.handleRequest(exchange)
@@ -72,7 +75,10 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder("/prefix ").respondingTo("")
+        val handler = RoutingBuilder("/prefix ").apply {
+            get("") {}
+        }.build()
+
         handler.fallbackHandler = fallbackHandler
 
         handler.handleRequest(exchange)
@@ -139,7 +145,10 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder().respondingTo("")
+        val handler = RoutingBuilder().apply {
+            get("") {}
+        }.build()
+
         handler.fallbackHandler = fallbackHandler
 
         handler.handleRequest(exchange)
@@ -152,7 +161,7 @@ class RoutingBuilderTest : StringSpec({
         val routingBuilder = RoutingBuilder()
 
         shouldThrow<IllegalArgumentException> {
-            routingBuilder.get(" ") {}
+            routingBuilder.path(" ") {}
         }
     }
 })
