@@ -7,7 +7,6 @@ import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.handlers.ExceptionHandler.THROWABLE
 import io.undertow.util.SameThreadExecutor
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 /**
@@ -52,16 +51,14 @@ class HandlerChain(handlers: Collection<SuspendingHttpHandler>, private val exce
 
         exchange.putAttachment(CURRENT_HANDLER, head)
 
-        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            HttpScope.launch {
-                exchange.putAttachment(THROWABLE, throwable)
-                exceptionHandler.handleRequest(exchange)
-            }
-        }
-
         exchange.dispatch(SameThreadExecutor.INSTANCE, Runnable {
-            HttpScope.launch(exceptionHandler) {
-                head.handleRequest(exchange)
+            HttpScope.launch {
+                try {
+                    head.handleRequest(exchange)
+                } catch (t: Throwable) {
+                    exchange.putAttachment(THROWABLE, t)
+                    exceptionHandler.handleRequest(exchange)
+                }
             }
         })
     }
