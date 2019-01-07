@@ -2,6 +2,8 @@ package io.github.xstefanox.underkow.dsl
 
 import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.undertow.Undertow
+import io.undertow.UndertowOptions
+import org.xnio.Options
 
 /**
  * The builder used to configure the server routing.
@@ -24,6 +26,30 @@ class ServerBuilder(
      */
     var host: String = DEFAULT_HOST
 
+    var workerIoThreads: Int? = null
+
+    var connectionHighWater: Int? = null
+
+    var connectionLowWater: Int? = null
+
+    var workerTaskCoreThreads: Int? = null
+
+    var workerTaskMaxThreads: Int? = null
+
+    var tcpNoDelay: Boolean? = null
+
+    var cork: Boolean? = null
+
+    var reuseAddresses: Boolean? = null
+
+    var balancingTokens: Int? = null
+
+    var balancingConnections: Int? = null
+
+    var backlog: Int? = null
+
+    var noRequestTimeout: Int? = null
+
     private var routeInitializer: RouteInitializer? = null
 
     /**
@@ -43,8 +69,60 @@ class ServerBuilder(
      *
      * @return an [Undertow] server configured with the DSL defined by this builder.
      */
-    fun build(): Undertow = Undertow.builder()
-        .setHandler(routeInitializer?.build())
-        .addHttpListener(port, host)
-        .build()
+    fun build(): Undertow {
+
+        val builder = Undertow.builder()
+            .setHandler(routeInitializer?.build())
+            .addHttpListener(port, host)
+
+        if (workerIoThreads != null) {
+            builder.setWorkerOption(Options.WORKER_IO_THREADS, workerIoThreads)
+        }
+
+        if (connectionHighWater != null) {
+            builder.setWorkerOption(Options.CONNECTION_HIGH_WATER, connectionHighWater)
+        }
+
+        if (connectionLowWater != null) {
+            builder.setWorkerOption(Options.CONNECTION_LOW_WATER, connectionLowWater)
+        }
+
+        if (workerTaskCoreThreads != null) {
+            builder.setWorkerOption(Options.WORKER_TASK_CORE_THREADS, workerTaskCoreThreads)
+        }
+
+        if (workerTaskMaxThreads != null) {
+            builder.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, workerTaskMaxThreads)
+        }
+
+        if (tcpNoDelay != null) {
+            builder.setWorkerOption(Options.TCP_NODELAY, tcpNoDelay)
+        }
+
+        if (cork != null) {
+            builder.setWorkerOption(Options.CORK, cork)
+        }
+
+        if (reuseAddresses != null) {
+            builder.setSocketOption(Options.REUSE_ADDRESSES, reuseAddresses)
+        }
+
+        if (balancingTokens != null) {
+            builder.setSocketOption(Options.BALANCING_TOKENS, balancingTokens)
+        }
+
+        if (balancingConnections != null) {
+            builder.setSocketOption(Options.BALANCING_CONNECTIONS, balancingConnections)
+        }
+
+        if (backlog != null) {
+            builder.setSocketOption(Options.BACKLOG, backlog)
+        }
+
+        if (noRequestTimeout != null) {
+            builder.setServerOption(UndertowOptions.NO_REQUEST_TIMEOUT, noRequestTimeout)
+        }
+
+        return builder.build()
+    }
 }
