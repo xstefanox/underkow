@@ -5,9 +5,9 @@ buildscript {
             undertow   : '2.0.16.Final',
             slf4j      : '1.7.25',
             restassured: '3.2.0',
-            mockk      : '1.8.13.kotlin13',
+            mockk      : '1.9',
             coroutines : '1.1.0',
-            klaxon     : '5.0.1',
+            klaxon     : '5.0.4',
     ]
 }
 
@@ -61,7 +61,6 @@ configurations.all {
         failOnVersionConflict()
 
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: v.kotlin
-        force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-common', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: v.kotlin
         force group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
