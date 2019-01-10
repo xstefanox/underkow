@@ -245,7 +245,7 @@ class RoutingBuilder(
 
         templates.forEach { template, map ->
             map.forEach { method, handler ->
-                logger.info("found route $method $template")
+                logger.debug("found route $method $template")
                 routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, UNHANDLED_EXCEPTION_HANDLER), dispatcher))
             }
         }
