@@ -1,6 +1,7 @@
 package io.github.xstefanox.underkow.dsl
 
 import io.github.xstefanox.underkow.SuspendingHttpHandler
+import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
 import io.undertow.Undertow
 import io.undertow.UndertowOptions
 import org.xnio.Options
@@ -25,6 +26,8 @@ class ServerBuilder(
      * The IP destination address used to listen for incoming requests; defaults to [DEFAULT_HOST].
      */
     var host: String = DEFAULT_HOST
+
+    var dispatcher: ExchangeDispatcher = DEFAULT_DISPATCHER
 
     var workerIoThreads: Int? = null
 
@@ -61,7 +64,7 @@ class ServerBuilder(
      * @param init the lambda function used to configure the routing.
      */
     fun routing(prefix: String = DEFAULT_PREFIX, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
-        routeInitializer = RouteInitializer(RoutingBuilder(prefix, filters.toList()), init)
+        routeInitializer = RouteInitializer(RoutingBuilder(prefix, filters.toList(), dispatcher), init)
     }
 
     /**

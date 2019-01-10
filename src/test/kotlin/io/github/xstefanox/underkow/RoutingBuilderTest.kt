@@ -1,12 +1,14 @@
 package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.dsl.RoutingBuilder
+import io.github.xstefanox.underkow.test.mockDispatcher
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.requesting
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
+import io.mockk.mockk
 import io.mockk.verify
 import io.undertow.util.Methods.GET
 
@@ -14,7 +16,7 @@ class RoutingBuilderTest : StringSpec({
 
     "routing builder should produce a new object on every execution" {
 
-        val routingBuilder = RoutingBuilder()
+        val routingBuilder = RoutingBuilder(dispatcher = mockk())
 
         val routingHandler1 = routingBuilder.build()
         val routingHandler2 = routingBuilder.build()
@@ -27,7 +29,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder().apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher()).apply {
             get("") {}
         }.build()
 
@@ -43,7 +45,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder(" ").apply {
+        val handler = RoutingBuilder(" ", dispatcher = mockDispatcher()).apply {
             get("") {}
         }.build()
 
@@ -59,7 +61,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder(" /prefix").apply {
+        val handler = RoutingBuilder(" /prefix", dispatcher = mockDispatcher()).apply {
             get("") {}
         }.build()
 
@@ -75,7 +77,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder("/prefix ").apply {
+        val handler = RoutingBuilder("/prefix ", dispatcher = mockDispatcher()).apply {
             get("") {}
         }.build()
 
@@ -88,7 +90,7 @@ class RoutingBuilderTest : StringSpec({
 
     "empty nested prefixes should not be accepted" {
 
-        val routingBuilder = RoutingBuilder()
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
         shouldThrow<IllegalArgumentException> {
             routingBuilder.path("") {}
@@ -97,7 +99,7 @@ class RoutingBuilderTest : StringSpec({
 
     "blank nested prefixes should not be accepted" {
 
-        val routingBuilder = RoutingBuilder()
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
         shouldThrow<IllegalArgumentException> {
             routingBuilder.path(" ") {}
@@ -109,7 +111,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder().apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher()).apply {
             path(" /prefix") {
                 get("") {}
             }
@@ -127,7 +129,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder().apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher()).apply {
             path("/prefix ") {
                 get("") {}
             }
@@ -145,7 +147,7 @@ class RoutingBuilderTest : StringSpec({
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder().apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher()).apply {
             get("") {}
         }.build()
 
@@ -158,7 +160,7 @@ class RoutingBuilderTest : StringSpec({
 
     "blank paths should not be accepted" {
 
-        val routingBuilder = RoutingBuilder()
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
         shouldThrow<IllegalArgumentException> {
             routingBuilder.path(" ") {}
@@ -169,7 +171,7 @@ class RoutingBuilderTest : StringSpec({
 
         class TestException : Exception()
 
-        val routingBuilder = RoutingBuilder()
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
         routingBuilder.path("/test") {
             throw TestException()

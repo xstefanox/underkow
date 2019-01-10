@@ -1,13 +1,11 @@
 package io.github.xstefanox.underkow.chain
 
-import io.github.xstefanox.underkow.HttpScope
 import io.github.xstefanox.underkow.SuspendingHttpHandler
+import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
 import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.handlers.ExceptionHandler.THROWABLE
-import io.undertow.util.SameThreadExecutor
-import kotlinx.coroutines.launch
 
 /**
  * Wrap a collection of handlers in a chain that can be traversed from the head to the tail; once exhausted, the chain
@@ -24,7 +22,11 @@ import kotlinx.coroutines.launch
  *                 important to use an ordered collection.
  * @param exceptionHandler the handler used to handle the exceptions thrown during the handling of the requests.
  */
-class HandlerChain(handlers: Collection<SuspendingHttpHandler>, private val exceptionHandler: SuspendingExceptionHandler) : HttpHandler {
+class HandlerChain(
+    handlers: Collection<SuspendingHttpHandler>,
+    private val exceptionHandler: SuspendingExceptionHandler,
+    private val dispatcher: ExchangeDispatcher
+) : HttpHandler {
 
     private val head: ChainedHttpHandler
 
@@ -51,15 +53,13 @@ class HandlerChain(handlers: Collection<SuspendingHttpHandler>, private val exce
 
         exchange.putAttachment(CURRENT_HANDLER, head)
 
-        exchange.dispatch(SameThreadExecutor.INSTANCE, Runnable {
-            HttpScope.launch {
-                try {
-                    head.handleRequest(exchange)
-                } catch (t: Throwable) {
-                    exchange.putAttachment(THROWABLE, t)
-                    exceptionHandler.handleRequest(exchange)
-                }
+        dispatcher.dispatch(exchange) {
+            try {
+                head.handleRequest(exchange)
+            } catch (t: Throwable) {
+                exchange.putAttachment(THROWABLE, t)
+                exceptionHandler.handleRequest(exchange)
             }
-        })
+        }
     }
 }

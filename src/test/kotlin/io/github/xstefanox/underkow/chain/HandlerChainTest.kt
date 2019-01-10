@@ -4,6 +4,7 @@ import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
 import io.github.xstefanox.underkow.exception.UnhandledExceptionHandler
 import io.github.xstefanox.underkow.test.eventually
+import io.github.xstefanox.underkow.test.mockDispatcher
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
@@ -25,8 +26,9 @@ class HandlerChainTest : StringSpec({
         val handler2 = mockHandler()
         val exchange = mockExchange()
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+        val dispatcher = mockDispatcher()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
+        val handlerChain = HandlerChain(listOf(handler1, handler2), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler), dispatcher)
 
         handlerChain.handleRequest(exchange)
 
@@ -45,8 +47,9 @@ class HandlerChainTest : StringSpec({
         val handler3 = mockHandler()
         val exchange = mockExchange()
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+        val dispatcher = mockDispatcher()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
+        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler), dispatcher)
 
         handlerChain.handleRequest(exchange)
 
@@ -66,8 +69,9 @@ class HandlerChainTest : StringSpec({
         val handler3 = mockHandler()
         val exchange = mockExchange()
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+        val dispatcher = mockDispatcher()
 
-        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
+        val handlerChain = HandlerChain(listOf(handler1, handler2, handler3), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler), dispatcher)
 
         handlerChain.handleRequest(exchange)
 
@@ -86,9 +90,10 @@ class HandlerChainTest : StringSpec({
     "the handler chain should be not empty" {
 
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+        val dispatcher = mockDispatcher()
 
         shouldThrow<EmptyHandlerChainException> {
-            HandlerChain(emptyList(), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
+            HandlerChain(emptyList(), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler), dispatcher)
         }
     }
 
@@ -96,9 +101,10 @@ class HandlerChainTest : StringSpec({
 
         val handler = mockFilter()
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+        val dispatcher = mockDispatcher()
 
         shouldThrow<DuplicateHandlersInChainException> {
-            HandlerChain(listOf(handler, handler), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler))
+            HandlerChain(listOf(handler, handler), SuspendingExceptionHandler(emptyMap(), unhandledExceptionHandler), dispatcher)
         }
     }
 
@@ -108,6 +114,7 @@ class HandlerChainTest : StringSpec({
         val exchange = mockExchange()
         val asyncExceptionHandler = mockk<SuspendingExceptionHandler>()
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
+        val dispatcher = mockDispatcher()
 
         coEvery {
             asyncExceptionHandler.handleRequest(any())
@@ -117,7 +124,7 @@ class HandlerChainTest : StringSpec({
             HandlerChainExhaustedException::class to asyncExceptionHandler
         )
 
-        val handlerChain = HandlerChain(listOf(handler), SuspendingExceptionHandler(exceptionHandlerMap, unhandledExceptionHandler))
+        val handlerChain = HandlerChain(listOf(handler), SuspendingExceptionHandler(exceptionHandlerMap, unhandledExceptionHandler), dispatcher)
 
         handlerChain.handleRequest(exchange)
 

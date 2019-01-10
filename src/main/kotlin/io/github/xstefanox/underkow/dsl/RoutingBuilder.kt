@@ -4,6 +4,7 @@ import io.github.xstefanox.underkow.FunctionHandlerAdapter
 import io.github.xstefanox.underkow.HttpHandlerAdapter
 import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.chain.HandlerChain
+import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
 import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
@@ -25,7 +26,11 @@ import kotlin.reflect.KClass
  * @param filters the filters applied to each call handled by the routes defined by this builder.
  */
 @UndertowDsl
-class RoutingBuilder(prefix: String = DEFAULT_PREFIX, private val filters: Collection<SuspendingHttpHandler> = emptyList()) {
+class RoutingBuilder(
+    prefix: String = DEFAULT_PREFIX,
+    private val filters: Collection<SuspendingHttpHandler> = emptyList(),
+    private val dispatcher: ExchangeDispatcher
+) {
 
     private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
 
@@ -181,7 +186,8 @@ class RoutingBuilder(prefix: String = DEFAULT_PREFIX, private val filters: Colle
 
         val routingBuilder = RoutingBuilder(
             this.prefix + prefix.trim(),
-            this.filters + filters.toList())
+            this.filters + filters.toList(),
+            dispatcher)
 
         paths += RouteInitializer(routingBuilder, init)
     }
@@ -240,7 +246,7 @@ class RoutingBuilder(prefix: String = DEFAULT_PREFIX, private val filters: Colle
         templates.forEach { template, map ->
             map.forEach { method, handler ->
                 logger.info("found route $method $template")
-                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, UNHANDLED_EXCEPTION_HANDLER)))
+                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, UNHANDLED_EXCEPTION_HANDLER), dispatcher))
             }
         }
 

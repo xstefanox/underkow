@@ -2,6 +2,7 @@ package io.github.xstefanox.underkow.test
 
 import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.chain.next
+import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
 import io.kotlintest.seconds
 import io.kotlintest.shouldThrow
 import io.mockk.coEvery
@@ -186,6 +187,22 @@ fun mockExchange() = mockk<HttpServerExchange>().apply {
         } just runs
 
         responseSender
+    }
+}
+
+/**
+ * Return an [ExchangeDispatcher] that simply executes the given block in the current thread.
+ */
+fun mockDispatcher() = mockk<ExchangeDispatcher>().apply {
+
+    val block = slot<suspend () -> Unit>()
+
+    every {
+        dispatch(any(), capture(block))
+    } answers {
+        runBlocking {
+            block.captured.invoke()
+        }
     }
 }
 
