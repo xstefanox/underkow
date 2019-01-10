@@ -12,6 +12,7 @@ import io.mockk.Ordering.ORDERED
 import io.mockk.coVerify
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
+import io.undertow.util.Methods.HEAD
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
@@ -35,6 +36,69 @@ class DSLTest : StringSpec({
             undertow.start()
         } finally {
             undertow.stop()
+        }
+    }
+
+    "configuring a HEAD request should add the handler to the server" {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                head("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = HEAD,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "HEAD requests could be defined inline without the need of an explicit cast" {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                head("/test") {
+                    httpHandler.handleRequest(it)
+                }
+            }
+        } assert {
+
+            request(
+                method = HEAD,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    "HEAD requests could be writter as regular, non-suspending HttpHandler" {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                head("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = HEAD,
+                path = "/test",
+                expect = OK
+            )
         }
     }
 

@@ -12,6 +12,7 @@ import io.undertow.server.RoutingHandler
 import io.undertow.util.HttpString
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
+import io.undertow.util.Methods.HEAD
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
@@ -47,6 +48,30 @@ class RoutingBuilder(
             BLANK_PREFIX_REQUIREMENT_MESSAGE
         }
     }
+
+    /**
+     * Add a new HEAD route to the list of routes configured by this builder.
+     *
+     * @param template the route template uri.
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun head(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(HEAD, template, handler)
+
+    /**
+     * Add a new HEAD route to the list of routes configured by this builder.
+     *
+     * @param template the route template uri.
+     * @param handler the handler that will receive the requests.
+     */
+    fun head(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(HEAD, template, handler)
+
+    /**
+     * Add a new HEAD route to the list of routes configured by this builder.
+     *
+     * @param template the route template uri.
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun head(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(HEAD, template, handler)
 
     /**
      * Add a new GET route to the list of routes configured by this builder.

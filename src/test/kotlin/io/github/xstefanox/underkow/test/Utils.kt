@@ -20,6 +20,7 @@ import io.undertow.util.AttachmentKey
 import io.undertow.util.HttpString
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
+import io.undertow.util.Methods.HEAD
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
@@ -215,6 +216,7 @@ fun request(method: HttpString, path: String, expect: Int) {
     val requestPath = "http://localhost:$TEST_HTTP_PORT$path"
 
     val launchRequest = when (method) {
+        HEAD -> requestSpecification.head(requestPath)
         GET -> requestSpecification.get(requestPath)
         POST -> requestSpecification.post(requestPath)
         PUT -> requestSpecification.put(requestPath)
