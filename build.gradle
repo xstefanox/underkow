@@ -48,7 +48,7 @@ dependencies {
     api group: 'io.undertow', name: 'undertow-core', version: v.undertow
     api group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
 
-    testImplementation group: 'io.kotlintest', name: 'kotlintest-runner-junit5', version: v.kotlintest
+    testImplementation group: 'io.kotlintest', name: 'kotlintest-assertions', version: v.kotlintest
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: v.restassured
     testImplementation group: 'io.mockk', name: 'mockk', version: v.mockk
@@ -105,6 +105,8 @@ test {
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
+    
+    systemProperty 'org.jboss.logging.provider', 'slf4j'
 }
 
 idea {

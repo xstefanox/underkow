@@ -3,7 +3,6 @@ package io.github.xstefanox.underkow.test
 import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.chain.next
 import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
-import io.kotlintest.seconds
 import io.kotlintest.shouldThrow
 import io.mockk.coEvery
 import io.mockk.every
@@ -26,6 +25,8 @@ import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
+import java.time.Duration
+import java.time.temporal.ChronoUnit.SECONDS
 import java.util.concurrent.Executor
 
 /**
@@ -237,4 +238,4 @@ inline fun <reified T : Throwable> coShouldThrow(noinline block: suspend () -> A
     }
 }
 
-fun <T> eventually(f: () -> T): T = io.kotlintest.eventually(5.seconds, AssertionError::class.java, f)
+fun <T> eventually(f: () -> T): T = io.kotlintest.eventually(Duration.of(5, SECONDS), AssertionError::class.java, f)
