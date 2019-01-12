@@ -7,14 +7,15 @@ import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.requesting
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
-import io.kotlintest.specs.StringSpec
 import io.mockk.mockk
 import io.mockk.verify
 import io.undertow.util.Methods.GET
+import org.junit.jupiter.api.Test
 
-class RoutingBuilderTest : StringSpec({
+internal class RoutingBuilderTest {
 
-    "routing builder should produce a new object on every execution" {
+    @Test
+    fun `routing builder should produce a new object on every execution`() {
 
         val routingBuilder = RoutingBuilder(dispatcher = mockk())
 
@@ -24,7 +25,8 @@ class RoutingBuilderTest : StringSpec({
         routingHandler1 shouldNotBe routingHandler2
     }
 
-    "empty base prefixes should be accepted" {
+    @Test
+    fun `empty base prefixes should be accepted`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
@@ -40,7 +42,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "blank base prefixes should be trimmed and thus accepted" {
+    @Test
+    fun `blank base prefixes should be trimmed and thus accepted`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
@@ -56,7 +59,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "base prefixes starting with blank characters should be trimmed" {
+    @Test
+    fun `base prefixes starting with blank characters should be trimmed`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
@@ -72,7 +76,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "base prefixes ending with blank characters should be trimmed" {
+    @Test
+    fun `base prefixes ending with blank characters should be trimmed`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
@@ -88,7 +93,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "empty nested prefixes should not be accepted" {
+    @Test
+    fun `empty nested prefixes should not be accepted`() {
 
         val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
@@ -97,7 +103,8 @@ class RoutingBuilderTest : StringSpec({
         }
     }
 
-    "blank nested prefixes should not be accepted" {
+    @Test
+    fun `blank nested prefixes should not be accepted`() {
 
         val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
@@ -106,7 +113,8 @@ class RoutingBuilderTest : StringSpec({
         }
     }
 
-    "nested prefixes starting with blank characters should be trimmed" {
+    @Test
+    fun `nested prefixes starting with blank characters should be trimmed`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
@@ -124,7 +132,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "nested prefixes ending with blank characters should be trimmed" {
+    @Test
+    fun `nested prefixes ending with blank characters should be trimmed`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
@@ -142,7 +151,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "empty paths should be accepted" {
+    @Test
+    fun `empty paths should be accepted`() {
 
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
@@ -158,7 +168,8 @@ class RoutingBuilderTest : StringSpec({
         verify(exactly = 0) { fallbackHandler.handleRequest(eq(exchange)) }
     }
 
-    "blank paths should not be accepted" {
+    @Test
+    fun `blank paths should not be accepted`() {
 
         val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
@@ -167,7 +178,8 @@ class RoutingBuilderTest : StringSpec({
         }
     }
 
-    "routing definition evaluation should happen on builder completion only" {
+    @Test
+    fun `routing definition evaluation should happen on builder completion only`() {
 
         class TestException : Exception()
 
@@ -181,4 +193,4 @@ class RoutingBuilderTest : StringSpec({
             routingBuilder.build()
         }
     }
-})
+}

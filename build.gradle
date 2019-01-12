@@ -8,6 +8,7 @@ buildscript {
             mockk      : '1.9',
             coroutines : '1.1.0',
             klaxon     : '5.0.4',
+            junit      : '5.3.2',
     ]
 }
 
@@ -51,6 +52,8 @@ dependencies {
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: v.slf4j
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: v.restassured
     testImplementation group: 'io.mockk', name: 'mockk', version: v.mockk
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: v.junit
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: v.junit
 
     exampleImplementation group: 'com.beust', name: 'klaxon', version: v.klaxon
 }
@@ -64,6 +67,9 @@ configurations.all {
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: v.kotlin
         force group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+        force group: 'org.opentest4j', name: 'opentest4j', version: '1.1.1'
+        force group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.3.2'
+        force group: 'org.junit.platform', name: 'junit-platform-engine', version: '1.3.2'
     }
 }
 

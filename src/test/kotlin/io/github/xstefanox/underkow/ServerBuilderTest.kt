@@ -2,11 +2,12 @@ package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.dsl.ServerBuilder
 import io.kotlintest.shouldThrow
-import io.kotlintest.specs.StringSpec
+import org.junit.jupiter.api.Test
 
-class ServerBuilderTest : StringSpec({
+internal class ServerBuilderTest {
 
-    "routing definition evaluation should happen on builder completion only" {
+    @Test
+    fun `routing definition evaluation should happen on builder completion only`() {
 
         class TestException : Exception()
 
@@ -20,4 +21,4 @@ class ServerBuilderTest : StringSpec({
             serverBuilder.build()
         }
     }
-})
+}

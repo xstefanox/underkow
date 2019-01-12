@@ -3,27 +3,20 @@ package io.github.xstefanox.underkow
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
 import io.github.xstefanox.underkow.test.request
-import io.kotlintest.specs.StringSpec
 import io.undertow.util.Methods.GET
 import io.undertow.util.StatusCodes.OK
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class CoroutineSupportTest : StringSpec({
+internal class CoroutineSupportTest {
 
-    val logger: Logger = LoggerFactory.getLogger(CoroutineSupportTest::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(CoroutineSupportTest::class.java)
 
-    suspend fun doSomethingSuspending(): String {
-        val deferred = GlobalScope.async {
-            logger.info("running async")
-            "this is the result"
-        }
-        return deferred.await()
-    }
-
-    "handlers could be implemented with suspending functions" {
+    @Test
+    fun `handlers could be implemented with suspending functions`() {
 
         undertow {
 
@@ -48,4 +41,12 @@ class CoroutineSupportTest : StringSpec({
             )
         }
     }
-})
+
+    private suspend fun doSomethingSuspending(): String {
+        val deferred = GlobalScope.async {
+            logger.info("running async")
+            "this is the result"
+        }
+        return deferred.await()
+    }
+}

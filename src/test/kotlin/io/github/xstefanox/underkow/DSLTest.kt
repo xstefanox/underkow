@@ -7,7 +7,6 @@ import io.github.xstefanox.underkow.test.mockHandler
 import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.request
 import io.github.xstefanox.underkow.test.throwing
-import io.kotlintest.specs.StringSpec
 import io.mockk.Ordering.ORDERED
 import io.mockk.coVerify
 import io.undertow.util.Methods.DELETE
@@ -19,14 +18,16 @@ import io.undertow.util.Methods.PUT
 import io.undertow.util.StatusCodes.INTERNAL_SERVER_ERROR
 import io.undertow.util.StatusCodes.NOT_FOUND
 import io.undertow.util.StatusCodes.OK
+import org.junit.jupiter.api.Test
 
-class DSLTest : StringSpec({
+internal class DSLTest {
 
-    class TestException1 : Exception()
+    private class TestException1 : Exception()
 
-    class TestException2 : Exception()
+    private class TestException2 : Exception()
 
-    "Undertow DSL builder should return an Undertow instance" {
+    @Test
+    fun `Undertow DSL builder should return an Undertow instance`() {
 
         val undertow = undertow {
             port = TEST_HTTP_PORT
@@ -39,7 +40,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "configuring a HEAD request should add the handler to the server" {
+    @Test
+    fun `configuring a HEAD request should add the handler to the server`() {
 
         val httpHandler = mockHandler()
 
@@ -60,7 +62,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "HEAD requests could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `HEAD requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
 
@@ -83,7 +86,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "HEAD requests could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `HEAD requests could be writter as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -102,7 +106,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "configuring a GET request should add the handler to the server" {
+    @Test
+    fun `configuring a GET request should add the handler to the server`() {
 
         val httpHandler = mockHandler()
 
@@ -123,7 +128,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "GET requests could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `GET requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
 
@@ -146,7 +152,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "GET requests could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `GET requests could be writter as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -165,7 +172,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "configuring a POST request should add the handler to the server" {
+    @Test
+    fun `configuring a POST request should add the handler to the server`() {
 
         val httpHandler = mockHandler()
 
@@ -186,7 +194,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "POST requests could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `POST requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
 
@@ -209,7 +218,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "POST requests could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `POST requests could be writter as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -228,7 +238,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "configuring a PUT request should add the handler to the server" {
+    @Test
+    fun `configuring a PUT request should add the handler to the server`() {
 
         val httpHandler = mockHandler()
 
@@ -249,7 +260,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "PUT requests could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `PUT requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
 
@@ -272,7 +284,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "PUT requests could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `PUT requests could be writter as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -291,7 +304,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "configuring a PATCH request should add the handler to the server" {
+    @Test
+    fun `configuring a PATCH request should add the handler to the server`() {
 
         val httpHandler = mockHandler()
 
@@ -312,7 +326,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "PATCH requests could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `PATCH requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
 
@@ -335,7 +350,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "PATCH requests could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `PATCH requests could be writter as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -354,7 +370,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "configuring a DELETE request should add the handler to the server" {
+    @Test
+    fun `configuring a DELETE request should add the handler to the server`() {
 
         val httpHandler = mockHandler()
 
@@ -375,7 +392,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "DELETE requests could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `DELETE requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
 
@@ -398,7 +416,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
     }
 
-    "DELETE requests could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `DELETE requests could be writter as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -417,7 +436,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "routes should be grouped by path prefix" {
+    @Test
+    fun `routes should be grouped by path prefix`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -454,7 +474,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "multiple path groups could be defined in the same block" {
+    @Test
+    fun `multiple path groups could be defined in the same block`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -494,7 +515,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "nesting path groups should nest routes" {
+    @Test
+    fun `nesting path groups should nest routes`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -534,7 +556,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "base prefix should be applied to all routes" {
+    @Test
+    fun `base prefix should be applied to all routes`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -574,7 +597,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "a filter should be applied to every nested route" {
+    @Test
+    fun `a filter should be applied to every nested route`() {
 
         val httpHandler = mockHandler()
         val filter = mockFilter()
@@ -602,7 +626,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "a filter should not be applied to non nested route" {
+    @Test
+    fun `a filter should not be applied to non nested route`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -635,7 +660,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 1) { httpHandler2.handleRequest(any()) }
     }
 
-    "a filter should be applied to nested path groups" {
+    @Test
+    fun `a filter should be applied to nested path groups`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -678,7 +704,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 0) { httpHandler3.handleRequest(any()) }
     }
 
-    "nested filters should be applied in chain" {
+    @Test
+    fun `nested filters should be applied in chain`() {
 
         val httpHandler1 = mockHandler()
         val httpHandler2 = mockHandler()
@@ -723,7 +750,8 @@ class DSLTest : StringSpec({
         coVerify(exactly = 0) { httpHandler3.handleRequest(any()) }
     }
 
-    "multiple filters declared on the same path should be applied in the given order" {
+    @Test
+    fun `multiple filters declared on the same path should be applied in the given order`() {
 
         val filter1 = mockFilter()
         val filter2 = mockFilter()
@@ -756,7 +784,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "a route should be handled by more than one method" {
+    @Test
+    fun `a route should be handled by more than one method`() {
 
         val httpHandler = mockHandler()
 
@@ -803,7 +832,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "exceptions should be handled by the configured handlers" {
+    @Test
+    fun `exceptions should be handled by the configured handlers`() {
 
         val handler = mockHandler().throwing(TestException1())
         val testException1Handler = mockHandler()
@@ -828,7 +858,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "when no exception handled are declared, any exception should return an INTERNAL SERVER ERROR" {
+    @Test
+    fun `when no exception handled are declared, any exception should return an INTERNAL SERVER ERROR`() {
 
         val handler = mockHandler().throwing(TestException1())
 
@@ -849,7 +880,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "an exception not handled by a declared handler should return an INTERNAL SERVER ERROR" {
+    @Test
+    fun `an exception not handled by a declared handler should return an INTERNAL SERVER ERROR`() {
 
         val handler = mockHandler().throwing(TestException1())
         val testException2Handler = mockHandler()
@@ -869,7 +901,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "exception handler should be applied only to handlers inside the path groups into which they are declared" {
+    @Test
+    fun `exception handler should be applied only to handlers inside the path groups into which they are declared`() {
 
         val handler1 = mockHandler().throwing(TestException1())
         val handler2 = mockHandler().throwing(TestException1())
@@ -904,7 +937,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "exception handlers could be writter as regular, non-suspending HttpHandler" {
+    @Test
+    fun `exception handlers could be writter as regular, non-suspending HttpHandler`() {
 
         val handler = mockHandler().throwing(TestException1())
         val testException1Handler = mockStandardHandler()
@@ -929,7 +963,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "exception handlers could be defined inline without the need of an explicit cast" {
+    @Test
+    fun `exception handlers could be defined inline without the need of an explicit cast`() {
 
         val handler = mockHandler().throwing(TestException1())
         val testException1Handler = mockStandardHandler()
@@ -956,7 +991,8 @@ class DSLTest : StringSpec({
         }
     }
 
-    "routing definition should be overridden if defined multiple times" {
+    @Test
+    fun `routing definition should be overridden if defined multiple times`() {
 
         val handler = mockHandler()
 
@@ -986,4 +1022,4 @@ class DSLTest : StringSpec({
             )
         }
     }
-})
+}

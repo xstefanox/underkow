@@ -9,18 +9,19 @@ import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
 import io.kotlintest.shouldThrow
-import io.kotlintest.specs.StringSpec
 import io.mockk.Ordering.ORDERED
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
+import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 
-class HandlerChainTest : StringSpec({
+internal class HandlerChainTest {
 
-    "a delegating filter should trigger the execution of the final handler" {
+    @Test
+    fun `a delegating filter should trigger the execution of the final handler`() {
 
         val handler1 = mockFilter()
         val handler2 = mockHandler()
@@ -40,7 +41,8 @@ class HandlerChainTest : StringSpec({
         }
     }
 
-    "multiple filters should delegate recursively until the final handler" {
+    @Test
+    fun `multiple filters should delegate recursively until the final handler`() {
 
         val handler1 = mockFilter()
         val handler2 = mockFilter()
@@ -62,7 +64,8 @@ class HandlerChainTest : StringSpec({
         }
     }
 
-    "when a filter does not delegate, the following filters should not be triggered" {
+    @Test
+    fun `when a filter does not delegate, the following filters should not be triggered`() {
 
         val handler1 = mockFilter()
         val handler2 = mockHandler()
@@ -87,7 +90,8 @@ class HandlerChainTest : StringSpec({
         }
     }
 
-    "the handler chain should be not empty" {
+    @Test
+    fun `the handler chain should be not empty`() {
 
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
         val dispatcher = mockDispatcher()
@@ -97,7 +101,8 @@ class HandlerChainTest : StringSpec({
         }
     }
 
-    "the handler chain should not contain duplicates" {
+    @Test
+    fun `the handler chain should not contain duplicates`() {
 
         val handler = mockFilter()
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
@@ -108,7 +113,8 @@ class HandlerChainTest : StringSpec({
         }
     }
 
-    "the last handler in the chain should not forward the request handling" {
+    @Test
+    fun `the last handler in the chain should not forward the request handling`() {
 
         val handler = mockFilter()
         val exchange = mockExchange()
@@ -134,4 +140,4 @@ class HandlerChainTest : StringSpec({
             }
         }
     }
-})
+}
