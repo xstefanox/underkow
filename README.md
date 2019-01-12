@@ -27,42 +27,47 @@ The following is a simple example showing a minimal application. See the example
 fun main() {
 
     // declare an Undertow server listening on TCP port 8080
-    undertow(8080) {
-
-        // declare a GET request requiring a path parameter
-        get("/users/{id}") { exchange ->
-            val id = exchange.getAttachment<PathTemplateMatch>(PathTemplateMatch.ATTACHMENT_KEY).parameters["id"]
-            exchange.responseSender.send("Hello world, this is user $id")
-        }
-
-        // declare a POST request that reads the full request body into a variable
-        post("/echo") { exchange ->
-            exchange.requestReceiver.receiveFullString { _, body ->
-                exchange.responseSender.send("Received body: $body")
-            }
-        }
+    undertow {
+    
+        port = 8080
         
-        // declare or inject a filter that will check for client credentials
-        val accessControlFilter : SuspendingHttpHandler = ...
-        
-        // declare a group of paths prefixed by "/some/protected/path": each incoming request will be passed to the
-        // access control filter before being dispatched to its handler
-        path("/some/protected/path", accessControlFilter) {
-            
-            get("/{id}") {
-                
+        routing {
+
+            // declare a GET request requiring a path parameter
+            get("/users/{id}") { exchange ->
+                val id = exchange.getAttachment<PathTemplateMatch>(PathTemplateMatch.ATTACHMENT_KEY).parameters["id"]
+                exchange.responseSender.send("Hello world, this is user $id")
             }
-            
-            post("/{id}") {
-                
+
+            // declare a POST request that reads the full request body into a variable
+            post("/echo") { exchange ->
+                exchange.requestReceiver.receiveFullString { _, body ->
+                    exchange.responseSender.send("Received body: $body")
+                }
             }
-            
-            put("/{id}") {
-                
-            }
-            
-            delete("/{id}") {
-                
+
+            // declare or inject a filter that will check for client credentials
+            val accessControlFilter : SuspendingHttpHandler = ...
+
+            // declare a group of paths prefixed by "/some/protected/path": each incoming request will be passed to the
+            // access control filter before being dispatched to its handler
+            path("/some/protected/path", accessControlFilter) {
+
+                get("/{id}") {
+
+                }
+
+                post("/{id}") {
+
+                }
+
+                put("/{id}") {
+
+                }
+
+                delete("/{id}") {
+
+                }
             }
         }
     }
@@ -70,3 +75,12 @@ fun main() {
    
 
 ```
+
+## Changelog
+
+2.0.0 Since coroutine support in Kotlin seems not to be stable yet, exchange dispatching has been modified to use the XNIO task pool by default and it can be overridden by the user.
+Builder options must be specified using DSL properties instead of DSL function arguments.
+
+1.0.1 Fix: dependencies were not defined correctly and the user had to explicitly add them in its pom.xml
+
+1.0.0 First release
