@@ -121,12 +121,12 @@ dokka {
 }
 
 task sourcesJar(type: org.gradle.jvm.tasks.Jar) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
 task javadocJar(type: org.gradle.jvm.tasks.Jar) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from dokka
 }
 
