@@ -14,8 +14,8 @@ write code that is simple and effective without sacrificing best practices like 
 ## Features
 
 * A simple and clear DSL that can be used to configure Underkow routing using a declarative syntax (inspired by [Ktor](https://ktor.io/))
-* Coroutine based: every request is handled by a [Kotlin coroutine](https://kotlinlang.org/docs/reference/coroutines-overview.html), no need to mess with pools
-* Completely asynchronous: every request is automatically dispatched to a coroutine and marked as asynchronous, thus making the I/O thread immediately ready to receive a new request
+* ~~Coroutine based: every request is handled by a [Kotlin coroutine](https://kotlinlang.org/docs/reference/coroutines-overview.html), no need to mess with pools~~ Coroutine support is sill under haevy development in Kotlin, so it has been temporarily removed (see [#254](https://github.com/Kotlin/kotlinx.coroutines/issues/254))
+* Completely asynchronous: every request is automatically marked as asynchronous, thus making the I/O thread immediately ready to receive a new request
 * Composable: request handlers and filters can be declared independently and then chained together to create a filter chain
 * Do not mess your classpath: Kotlin and Undertow are the only dependencies
 
@@ -78,9 +78,15 @@ fun main() {
 
 ## Changelog
 
-2.0.0 Since coroutine support in Kotlin seems not to be stable yet, exchange dispatching has been modified to use the XNIO task pool by default and it can be overridden by the user.
-Builder options must be specified using DSL properties instead of DSL function arguments.
+### 2.0.0
 
-1.0.1 Fix: dependencies were not defined correctly and the user had to explicitly add them in its pom.xml
+* Since coroutine support in Kotlin seems not to be stable yet, exchange dispatching has been modified to use the XNIO task pool by default and it can be overridden by the user.
+* Builder options must be specified using DSL properties instead of DSL function arguments.
 
-1.0.0 First release
+### 1.0.1
+
+Fix: dependencies were not defined correctly and the user had to explicitly add them in its pom.xml
+
+### 1.0.0
+
+First release
