@@ -12,6 +12,7 @@ import io.mockk.coVerify
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.HEAD
+import io.undertow.util.Methods.OPTIONS
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
@@ -430,6 +431,72 @@ internal class DSLTest {
 
             request(
                 method = DELETE,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `configuring a OPTIONS request should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                options("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = OPTIONS,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `OPTIONS requests could be defined inline without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                options("/test") {
+                    httpHandler.handleRequest(it)
+                }
+            }
+        } assert {
+
+            request(
+                method = OPTIONS,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `OPTIONS requests could be writter as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                options("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = OPTIONS,
                 path = "/test",
                 expect = OK
             )

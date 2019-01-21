@@ -20,6 +20,7 @@ import io.undertow.util.HttpString
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.HEAD
+import io.undertow.util.Methods.OPTIONS
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
@@ -223,6 +224,7 @@ fun request(method: HttpString, path: String, expect: Int) {
         PUT -> requestSpecification.put(requestPath)
         PATCH -> requestSpecification.patch(requestPath)
         DELETE -> requestSpecification.delete(requestPath)
+        OPTIONS -> requestSpecification.options(requestPath)
         else -> throw AssertionError("unsupported method $method")
     }
 
