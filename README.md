@@ -78,6 +78,10 @@ fun main() {
 
 ## Changelog
 
+### 2.1.0
+
+Added support for OPTIONS HTTP verb
+
 ### 2.0.0
 
 * Since coroutine support in Kotlin seems not to be stable yet, exchange dispatching has been modified to use the XNIO task pool by default and it can be overridden by the user.
