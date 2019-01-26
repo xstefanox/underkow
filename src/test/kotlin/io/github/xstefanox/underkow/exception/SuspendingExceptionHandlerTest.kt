@@ -1,5 +1,6 @@
 package io.github.xstefanox.underkow.exception
 
+import io.github.xstefanox.underkow.test.AnException
 import io.github.xstefanox.underkow.test.coShouldThrow
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockHandler
@@ -14,8 +15,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 internal class SuspendingExceptionHandlerTest {
-
-    private class AnException : Exception()
 
     @Test
     fun `an exchange without attached throwable cannot be handled`() {

@@ -1,6 +1,7 @@
 package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.dsl.RoutingBuilder
+import io.github.xstefanox.underkow.test.AnException
 import io.github.xstefanox.underkow.test.mockDispatcher
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockStandardHandler
@@ -181,15 +182,13 @@ internal class RoutingBuilderTest {
     @Test
     fun `routing definition evaluation should happen on builder completion only`() {
 
-        class TestException : Exception()
-
         val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher())
 
         routingBuilder.path("/test") {
-            throw TestException()
+            throw AnException()
         }
 
-        shouldThrow<TestException> {
+        shouldThrow<AnException> {
             routingBuilder.build()
         }
     }

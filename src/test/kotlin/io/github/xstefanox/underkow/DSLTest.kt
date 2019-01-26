@@ -1,5 +1,7 @@
 package io.github.xstefanox.underkow
 
+import io.github.xstefanox.underkow.test.AnException
+import io.github.xstefanox.underkow.test.AnotherException
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
 import io.github.xstefanox.underkow.test.mockFilter
@@ -22,10 +24,6 @@ import io.undertow.util.StatusCodes.OK
 import org.junit.jupiter.api.Test
 
 internal class DSLTest {
-
-    private class TestException1 : Exception()
-
-    private class TestException2 : Exception()
 
     @Test
     fun `Undertow DSL builder should return an Undertow instance`() {
@@ -902,14 +900,14 @@ internal class DSLTest {
     @Test
     fun `exceptions should be handled by the configured handlers`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
         val testException1Handler = mockHandler()
 
         undertow {
             port = TEST_HTTP_PORT
             routing {
                 get("/test", handler)
-                on<TestException1>(testException1Handler)
+                on<AnException>(testException1Handler)
             }
         } assert {
 
@@ -928,7 +926,7 @@ internal class DSLTest {
     @Test
     fun `when no exception handled are declared, any exception should return an INTERNAL SERVER ERROR`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
 
         undertow {
 
@@ -950,14 +948,14 @@ internal class DSLTest {
     @Test
     fun `an exception not handled by a declared handler should return an INTERNAL SERVER ERROR`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
         val testException2Handler = mockHandler()
 
         undertow {
             port = TEST_HTTP_PORT
             routing {
                 get("/test", handler)
-                on<TestException2>(testException2Handler)
+                on<AnotherException>(testException2Handler)
             }
         } assert {
             request(
@@ -971,8 +969,8 @@ internal class DSLTest {
     @Test
     fun `exception handler should be applied only to handlers inside the path groups into which they are declared`() {
 
-        val handler1 = mockHandler().throwing(TestException1())
-        val handler2 = mockHandler().throwing(TestException1())
+        val handler1 = mockHandler().throwing(AnException())
+        val handler2 = mockHandler().throwing(AnException())
         val testException1Handler = mockHandler()
 
         undertow {
@@ -985,7 +983,7 @@ internal class DSLTest {
 
                 path("/prefix2") {
                     get("/test2", handler2)
-                    on<TestException1>(testException1Handler)
+                    on<AnException>(testException1Handler)
                 }
             }
         } assert {
@@ -1007,14 +1005,14 @@ internal class DSLTest {
     @Test
     fun `exception handlers could be writter as regular, non-suspending HttpHandler`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
         val testException1Handler = mockStandardHandler()
 
         undertow {
             port = TEST_HTTP_PORT
             routing {
                 get("/test", handler)
-                on<TestException1>(testException1Handler)
+                on<AnException>(testException1Handler)
             }
         } assert {
 
@@ -1033,14 +1031,14 @@ internal class DSLTest {
     @Test
     fun `exception handlers could be defined inline without the need of an explicit cast`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
         val testException1Handler = mockStandardHandler()
 
         undertow {
             port = TEST_HTTP_PORT
             routing {
                 get("/test", handler)
-                on<TestException1> {
+                on<AnException> {
                     testException1Handler.handleRequest(it)
                 }
             }
@@ -1061,7 +1059,7 @@ internal class DSLTest {
     @Test
     fun `exception handlers should be inherited by nested builders`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
         val exceptionHandler1 = mockHandler()
 
         undertow {
@@ -1070,7 +1068,7 @@ internal class DSLTest {
 
             routing {
 
-                on<TestException1>(exceptionHandler1)
+                on<AnException>(exceptionHandler1)
                 get("/test", handler)
 
                 path("/nested") {
@@ -1093,7 +1091,7 @@ internal class DSLTest {
     @Test
     fun `nested exception handler should override handlers defined by parent builders`() {
 
-        val handler = mockHandler().throwing(TestException1())
+        val handler = mockHandler().throwing(AnException())
         val exceptionHandler1 = mockHandler()
         val exceptionHandler2 = mockHandler()
 
@@ -1103,11 +1101,11 @@ internal class DSLTest {
 
             routing {
 
-                on<TestException1>(exceptionHandler1)
+                on<AnException>(exceptionHandler1)
                 get("/test", handler)
 
                 path("/nested") {
-                    on<TestException1>(exceptionHandler2)
+                    on<AnException>(exceptionHandler2)
                     get("/test", handler)
                 }
             }
