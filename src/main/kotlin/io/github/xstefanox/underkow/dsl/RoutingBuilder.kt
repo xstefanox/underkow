@@ -6,6 +6,7 @@ import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.chain.HandlerChain
 import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
 import io.github.xstefanox.underkow.exception.SuspendingExceptionHandler
+import io.github.xstefanox.underkow.putAllIfAbsent
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
@@ -301,6 +302,7 @@ class RoutingBuilder(
         }
 
         paths.forEach { group ->
+            group.routingBuilder.exceptions.putAllIfAbsent(exceptions)
             routingHandler.addAll(group.build())
         }
 

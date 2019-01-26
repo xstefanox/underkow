@@ -1059,6 +1059,76 @@ internal class DSLTest {
     }
 
     @Test
+    fun `exception handlers should be inherited by nested builders`() {
+
+        val handler = mockHandler().throwing(TestException1())
+        val exceptionHandler1 = mockHandler()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing {
+
+                on<TestException1>(exceptionHandler1)
+                get("/test", handler)
+
+                path("/nested") {
+                    get("/test", handler)
+                }
+            }
+        } assert {
+            request(
+                method = GET,
+                path = "/nested/test",
+                expect = OK
+            )
+        }
+
+        coVerify {
+            exceptionHandler1.handleRequest(any())
+        }
+    }
+
+    @Test
+    fun `nested exception handler should override handlers defined by parent builders`() {
+
+        val handler = mockHandler().throwing(TestException1())
+        val exceptionHandler1 = mockHandler()
+        val exceptionHandler2 = mockHandler()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing {
+
+                on<TestException1>(exceptionHandler1)
+                get("/test", handler)
+
+                path("/nested") {
+                    on<TestException1>(exceptionHandler2)
+                    get("/test", handler)
+                }
+            }
+        } assert {
+            request(
+                method = GET,
+                path = "/nested/test",
+                expect = OK
+            )
+        }
+
+        coVerify {
+            exceptionHandler2.handleRequest(any())
+        }
+
+        coVerify(exactly = 0) {
+            exceptionHandler1.handleRequest(any())
+        }
+    }
+
+    @Test
     fun `routing definition should be overridden if defined multiple times`() {
 
         val handler = mockHandler()
