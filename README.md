@@ -78,6 +78,10 @@ fun main() {
 
 ## Changelog
 
+### 2.1.1
+
+Fixed exception handler inheritance in nested routing builders.
+
 ### 2.1.0
 
 Added support for OPTIONS HTTP verb
