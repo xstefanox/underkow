@@ -368,7 +368,7 @@ class RoutingBuilder(
 
     /**
      * Begin the definition of a set of routes nested in the given path prefix. Every call to this method overwrites a
-     * previously defined nested routing, if present.
+     * previously defined nested routing with the same prefix, if present.
      *
      * @param prefix the path prefix that will be applied to each route defined by the nested builder; it cannot be an
      *               empty or blank string.
@@ -384,6 +384,23 @@ class RoutingBuilder(
 
         val routingBuilder = RoutingBuilder(
             this.prefix + prefix.trim(),
+            this.filters + filters.toList(),
+            dispatcher)
+
+        paths += RouteInitializer(routingBuilder, init)
+    }
+
+    /**
+     * Begin the definition of a set of routes filtered by the given filters.
+     *
+     * @param filters the collection of filters that will be applied to every request received by the routes defined by
+     *                the nested builder.
+     * @param init the lambda function used to configure the nested builder.
+     */
+    fun filter(vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
+
+        val routingBuilder = RoutingBuilder(
+            prefix,
             this.filters + filters.toList(),
             dispatcher)
 

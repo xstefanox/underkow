@@ -1274,6 +1274,45 @@ internal class DSLTest {
     }
 
     @Test
+    fun `a filter should be applied to route groups without defining a common prefix`() {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+        val filter1 = mockFilter()
+        val filter2 = mockFilter()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing {
+
+                filter(filter1, filter2) {
+
+                    get("/test1", httpHandler1)
+                }
+
+                get("/test2", httpHandler2)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test1",
+                expect = OK
+            )
+        }
+
+        coVerify(ordering = ORDERED) {
+            filter1.handleRequest(any())
+            filter2.handleRequest(any())
+            httpHandler1.handleRequest(any())
+        }
+
+        coVerify(exactly = 0) { httpHandler2.handleRequest(any()) }
+    }
+
+    @Test
     fun `nested filters should be applied in chain`() {
 
         val httpHandler1 = mockHandler()
