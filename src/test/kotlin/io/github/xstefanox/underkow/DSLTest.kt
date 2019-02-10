@@ -1167,6 +1167,138 @@ internal class DSLTest {
     }
 
     @Test
+    fun `base filters should be applied to all routes, prefixed with the given prefix`() {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+        val filter = mockFilter()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing("/base", filter) {
+
+                path("/prefix1") {
+
+                    get("/test1", httpHandler1)
+                }
+
+                path("/prefix2") {
+
+                    get("/test2", httpHandler2)
+                }
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/base/prefix1/test1",
+                expect = OK
+            )
+
+            request(
+                method = GET,
+                path = "/base/prefix2/test2",
+                expect = OK
+            )
+        }
+
+        coVerify(ordering = ORDERED) {
+            filter.handleRequest(any())
+            httpHandler1.handleRequest(any())
+        }
+
+        coVerify(ordering = ORDERED) {
+            filter.handleRequest(any())
+            httpHandler2.handleRequest(any())
+        }
+    }
+
+    @Test
+    fun `base filters should be applied to all routes`() {
+
+        val httpHandler1 = mockHandler()
+        val httpHandler2 = mockHandler()
+        val filter = mockFilter()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing(filter) {
+
+                path("/prefix1") {
+
+                    get("/test1", httpHandler1)
+                }
+
+                path("/prefix2") {
+
+                    get("/test2", httpHandler2)
+                }
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix1/test1",
+                expect = OK
+            )
+
+            request(
+                method = GET,
+                path = "/prefix2/test2",
+                expect = OK
+            )
+        }
+
+        coVerify(ordering = ORDERED) {
+            filter.handleRequest(any())
+            httpHandler1.handleRequest(any())
+        }
+
+        coVerify(ordering = ORDERED) {
+            filter.handleRequest(any())
+            httpHandler2.handleRequest(any())
+        }
+    }
+
+    @Test
+    fun `base filters should be applied in order`() {
+
+        val httpHandler1 = mockHandler()
+        val filter1 = mockFilter()
+        val filter2 = mockFilter()
+
+        undertow {
+
+            port = TEST_HTTP_PORT
+
+            routing(filter1, filter2) {
+
+                path("/prefix1") {
+
+                    get("/test1", httpHandler1)
+                }
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/prefix1/test1",
+                expect = OK
+            )
+        }
+
+        coVerify(ordering = ORDERED) {
+            filter1.handleRequest(any())
+            filter2.handleRequest(any())
+            httpHandler1.handleRequest(any())
+        }
+    }
+
+    @Test
     fun `a filter should be applied to every nested route`() {
 
         val httpHandler = mockHandler()

@@ -63,8 +63,20 @@ class ServerBuilder(
      * @param filters the collection of filters that will be applied to every request received by the server.
      * @param init the lambda function used to configure the routing.
      */
-    fun routing(prefix: String = DEFAULT_PREFIX, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
+    fun routing(prefix: String, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
         routeInitializer = RouteInitializer(RoutingBuilder(prefix, filters.toList(), dispatcher), init)
+    }
+
+
+    /**
+     * Begin the definition of the server routing. Every call to this method overwrites a previously defined routing, if
+     * present.
+     *
+     * @param filters the collection of filters that will be applied to every request received by the server.
+     * @param init the lambda function used to configure the routing.
+     */
+    fun routing(vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
+        routeInitializer = RouteInitializer(RoutingBuilder(DEFAULT_PREFIX, filters.toList(), dispatcher), init)
     }
 
     /**

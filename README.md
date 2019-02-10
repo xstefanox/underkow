@@ -72,7 +72,7 @@ fun main() {
 
             // declare or inject a filter that will log any request and response
             val requestLoggingFilter : SuspendingHttpHandler = ...
-            
+
             filter(requestLoggingFilter) {
 
                 get("/something/{id}") {
@@ -95,7 +95,7 @@ fun main() {
 ### 2.2.0
 
 * Added support for handlers defined with no explicit path
-* Added support the definition of routes filtered by the same filter but having no common prefix
+* Added support for the definition of routes filtered by the same filter but having no common prefix
 
 ### 2.1.1
 
