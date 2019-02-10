@@ -57,7 +57,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun head(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(HEAD, template, handler)
+    fun head(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(HEAD, template, handler)
+
+    /**
+     * Add a new HEAD route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun head(handler: suspend (HttpServerExchange) -> Unit) = addHandler(HEAD, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new HEAD route to the list of routes configured by this builder.
@@ -65,7 +72,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun head(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(HEAD, template, handler)
+    fun head(template: String, handler: SuspendingHttpHandler) = addHandler(HEAD, template, handler)
+
+    /**
+     * Add a new HEAD route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests.
+     */
+    fun head(handler: SuspendingHttpHandler) = addHandler(HEAD, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new HEAD route to the list of routes configured by this builder.
@@ -73,7 +87,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun head(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(HEAD, template, handler)
+    fun head(template: String, handler: HttpHandler) = addHandler(HEAD, template, handler)
+
+    /**
+     * Add a new HEAD route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun head(handler: HttpHandler) = addHandler(HEAD, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new GET route to the list of routes configured by this builder.
@@ -81,7 +102,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun get(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(GET, template, handler)
+    fun get(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(GET, template, handler)
+
+    /**
+     * Add a new GET route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun get(handler: suspend (HttpServerExchange) -> Unit) = addHandler(GET, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new GET route to the list of routes configured by this builder.
@@ -94,10 +122,24 @@ class RoutingBuilder(
     /**
      * Add a new GET route to the list of routes configured by this builder.
      *
+     * @param handler the handler that will receive the requests.
+     */
+    fun get(handler: SuspendingHttpHandler) = addHandler(GET, DEFAULT_PREFIX, handler)
+
+    /**
+     * Add a new GET route to the list of routes configured by this builder.
+     *
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun get(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(GET, template, handler)
+    fun get(template: String, handler: HttpHandler) = addHandler(GET, template, handler)
+
+    /**
+     * Add a new GET route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun get(handler: HttpHandler) = addHandler(GET, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new POST route to the list of routes configured by this builder.
@@ -105,7 +147,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun post(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(POST, template, handler)
+    fun post(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(POST, template, handler)
+
+    /**
+     * Add a new POST route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun post(handler: suspend (HttpServerExchange) -> Unit) = addHandler(POST, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new POST route to the list of routes configured by this builder.
@@ -113,7 +162,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun post(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(POST, template, handler)
+    fun post(template: String, handler: SuspendingHttpHandler) = addHandler(POST, template, handler)
+
+    /**
+     * Add a new POST route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests.
+     */
+    fun post(handler: SuspendingHttpHandler) = addHandler(POST, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new POST route to the list of routes configured by this builder.
@@ -121,7 +177,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun post(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(POST, template, handler)
+    fun post(template: String, handler: HttpHandler) = addHandler(POST, template, handler)
+
+    /**
+     * Add a new POST route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun post(handler: HttpHandler) = addHandler(POST, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new PUT route to the list of routes configured by this builder.
@@ -129,7 +192,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun put(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(PUT, template, handler)
+    fun put(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(PUT, template, handler)
+
+    /**
+     * Add a new PUT route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun put(handler: suspend (HttpServerExchange) -> Unit) = addHandler(PUT, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new PUT route to the list of routes configured by this builder.
@@ -137,7 +207,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun put(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(PUT, template, handler)
+    fun put(template: String, handler: SuspendingHttpHandler) = addHandler(PUT, template, handler)
+
+    /**
+     * Add a new PUT route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests.
+     */
+    fun put(handler: SuspendingHttpHandler) = addHandler(PUT, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new PUT route to the list of routes configured by this builder.
@@ -145,7 +222,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun put(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(PUT, template, handler)
+    fun put(template: String, handler: HttpHandler) = addHandler(PUT, template, handler)
+
+    /**
+     * Add a new PUT route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun put(handler: HttpHandler) = addHandler(PUT, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new PATCH route to the list of routes configured by this builder.
@@ -153,7 +237,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun patch(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(PATCH, template, handler)
+    fun patch(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(PATCH, template, handler)
+
+    /**
+     * Add a new PATCH route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun patch(handler: suspend (HttpServerExchange) -> Unit) = addHandler(PATCH, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new PATCH route to the list of routes configured by this builder.
@@ -161,7 +252,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun patch(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(PATCH, template, handler)
+    fun patch(template: String, handler: SuspendingHttpHandler) = addHandler(PATCH, template, handler)
+
+    /**
+     * Add a new PATCH route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests.
+     */
+    fun patch(handler: SuspendingHttpHandler) = addHandler(PATCH, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new PATCH route to the list of routes configured by this builder.
@@ -169,7 +267,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun patch(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(PATCH, template, handler)
+    fun patch(template: String, handler: HttpHandler) = addHandler(PATCH, template, handler)
+
+    /**
+     * Add a new PATCH route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun patch(handler: HttpHandler) = addHandler(PATCH, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new DELETE route to the list of routes configured by this builder.
@@ -177,7 +282,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun delete(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(DELETE, template, handler)
+    fun delete(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(DELETE, template, handler)
+
+    /**
+     * Add a new DELETE route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun delete(handler: suspend (HttpServerExchange) -> Unit) = addHandler(DELETE, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new DELETE route to the list of routes configured by this builder.
@@ -185,7 +297,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun delete(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(DELETE, template, handler)
+    fun delete(template: String, handler: SuspendingHttpHandler) = addHandler(DELETE, template, handler)
+
+    /**
+     * Add a new DELETE route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests.
+     */
+    fun delete(handler: SuspendingHttpHandler) = addHandler(DELETE, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new DELETE route to the list of routes configured by this builder.
@@ -193,7 +312,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun delete(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(DELETE, template, handler)
+    fun delete(template: String, handler: HttpHandler) = addHandler(DELETE, template, handler)
+
+    /**
+     * Add a new DELETE route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun delete(handler: HttpHandler) = addHandler(DELETE, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new OPTIONS route to the list of routes configured by this builder.
@@ -201,7 +327,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun options(template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) = addHandler(OPTIONS, template, handler)
+    fun options(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(OPTIONS, template, handler)
+
+    /**
+     * Add a new OPTIONS route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests, defined as a lambda function.
+     */
+    fun options(handler: suspend (HttpServerExchange) -> Unit) = addHandler(OPTIONS, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new OPTIONS route to the list of routes configured by this builder.
@@ -209,7 +342,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests.
      */
-    fun options(template: String = DEFAULT_PREFIX, handler: SuspendingHttpHandler) = addHandler(OPTIONS, template, handler)
+    fun options(template: String, handler: SuspendingHttpHandler) = addHandler(OPTIONS, template, handler)
+
+    /**
+     * Add a new OPTIONS route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests.
+     */
+    fun options(handler: SuspendingHttpHandler) = addHandler(OPTIONS, DEFAULT_PREFIX, handler)
 
     /**
      * Add a new OPTIONS route to the list of routes configured by this builder.
@@ -217,7 +357,14 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
-    fun options(template: String = DEFAULT_PREFIX, handler: HttpHandler) = addHandler(OPTIONS, template, handler)
+    fun options(template: String, handler: HttpHandler) = addHandler(OPTIONS, template, handler)
+
+    /**
+     * Add a new OPTIONS route to the list of routes configured by this builder.
+     *
+     * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
+     */
+    fun options(handler: HttpHandler) = addHandler(OPTIONS, DEFAULT_PREFIX, handler)
 
     /**
      * Begin the definition of a set of routes nested in the given path prefix. Every call to this method overwrites a

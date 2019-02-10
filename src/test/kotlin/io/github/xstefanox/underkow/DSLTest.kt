@@ -62,6 +62,30 @@ internal class DSLTest {
     }
 
     @Test
+    fun `configuring a HEAD request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    head(httpHandler)
+                }
+            }
+        } assert {
+
+            request(
+                method = HEAD,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
     fun `HEAD requests could be defined inline without the need of an explicit cast`() {
 
         val httpHandler = mockHandler()
@@ -86,7 +110,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `HEAD requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `HEAD requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    head {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = HEAD,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `HEAD requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -94,6 +144,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 head("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = HEAD,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `HEAD requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    head(httpHandler)
+                }
             }
         } assert {
 
@@ -114,6 +186,30 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 get("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `configuring a GET request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    get(httpHandler)
+                }
             }
         } assert {
 
@@ -152,7 +248,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `GET requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `GET requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    get {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `GET requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -160,6 +282,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 get("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = GET,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `GET requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    get(httpHandler)
+                }
             }
         } assert {
 
@@ -180,6 +324,30 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 post("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `configuring a POST request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    post(httpHandler)
+                }
             }
         } assert {
 
@@ -218,7 +386,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `POST requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `POST requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    post {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `POST requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -226,6 +420,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 post("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = POST,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `POST requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    post(httpHandler)
+                }
             }
         } assert {
 
@@ -246,6 +462,30 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 put("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `configuring a PUT request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    put(httpHandler)
+                }
             }
         } assert {
 
@@ -284,7 +524,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `PUT requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `PUT requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    put {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `PUT requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -292,6 +558,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 put("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = PUT,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `PUT requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    put(httpHandler)
+                }
             }
         } assert {
 
@@ -312,6 +600,30 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 patch("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `configuring a PATCH request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    patch(httpHandler)
+                }
             }
         } assert {
 
@@ -350,7 +662,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `PATCH requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `PATCH requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    patch {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `PATCH requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -358,6 +696,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 patch("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = PATCH,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `PATCH requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    patch(httpHandler)
+                }
             }
         } assert {
 
@@ -378,6 +738,30 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 delete("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `configuring a DELETE request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    delete(httpHandler)
+                }
             }
         } assert {
 
@@ -416,7 +800,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `DELETE requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `DELETE requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    delete {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `DELETE requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -424,6 +834,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 delete("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = DELETE,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `DELETE requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    delete(httpHandler)
+                }
             }
         } assert {
 
@@ -444,6 +876,30 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 options("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = OPTIONS,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `configuring a OPTIONS request with no path should add the handler to the server`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    options(httpHandler)
+                }
             }
         } assert {
 
@@ -482,7 +938,33 @@ internal class DSLTest {
     }
 
     @Test
-    fun `OPTIONS requests could be writter as regular, non-suspending HttpHandler`() {
+    fun `OPTION requests could be defined inline with no path and without the need of an explicit cast`() {
+
+        val httpHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    options {
+                        httpHandler.handleRequest(it)
+                    }
+                }
+            }
+        } assert {
+
+            request(
+                method = OPTIONS,
+                path = "/test",
+                expect = OK
+            )
+        }
+
+        coVerify(exactly = 1) { httpHandler.handleRequest(any()) }
+    }
+
+    @Test
+    fun `OPTIONS requests could be written as regular, non-suspending HttpHandler`() {
 
         val httpHandler = mockStandardHandler()
 
@@ -490,6 +972,28 @@ internal class DSLTest {
             port = TEST_HTTP_PORT
             routing {
                 options("/test", httpHandler)
+            }
+        } assert {
+
+            request(
+                method = OPTIONS,
+                path = "/test",
+                expect = OK
+            )
+        }
+    }
+
+    @Test
+    fun `OPTIONS requests could be written with no path as regular, non-suspending HttpHandler`() {
+
+        val httpHandler = mockStandardHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            routing {
+                path("/test") {
+                    options(httpHandler)
+                }
             }
         } assert {
 
@@ -1003,7 +1507,7 @@ internal class DSLTest {
     }
 
     @Test
-    fun `exception handlers could be writter as regular, non-suspending HttpHandler`() {
+    fun `exception handlers could be written as regular, non-suspending HttpHandler`() {
 
         val handler = mockHandler().throwing(AnException())
         val testException1Handler = mockStandardHandler()
