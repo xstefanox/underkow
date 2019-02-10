@@ -67,7 +67,6 @@ class ServerBuilder(
         routeInitializer = RouteInitializer(RoutingBuilder(prefix, filters.toList(), dispatcher), init)
     }
 
-
     /**
      * Begin the definition of the server routing. Every call to this method overwrites a previously defined routing, if
      * present.
