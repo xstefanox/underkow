@@ -95,7 +95,6 @@ fun main() {
                         logger.info("$pet deleted")
 
                         exchange.send(OK, pet)
-
                     } else {
                         exchange.send(NOT_FOUND)
                     }
