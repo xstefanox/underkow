@@ -9,6 +9,8 @@ buildscript {
             coroutines : '1.1.1',
             klaxon     : '5.0.5',
             junit      : '5.4.0',
+            eventsource: '1.9.1',
+            failsafe   : '2.0.1',
     ]
 }
 
@@ -54,6 +56,8 @@ dependencies {
     testImplementation group: 'io.mockk', name: 'mockk', version: v.mockk
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: v.junit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: v.junit
+    testImplementation group: 'com.launchdarkly', name: 'okhttp-eventsource', version: v.eventsource
+    testImplementation group: 'net.jodah', name: 'failsafe', version: v.failsafe
 
     exampleImplementation group: 'com.beust', name: 'klaxon', version: v.klaxon
 }
@@ -69,6 +73,7 @@ configurations.all {
         force group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: v.kotlin
         force group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
         force group: 'org.opentest4j', name: 'opentest4j', version: '1.1.1'
+        force group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
     }
 }
 
@@ -104,7 +109,7 @@ test {
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
-    
+
     systemProperty 'org.jboss.logging.provider', 'slf4j'
 }
 

@@ -10,6 +10,7 @@ import io.github.xstefanox.underkow.putAllIfAbsent
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
+import io.undertow.server.handlers.sse.ServerSentEventHandler
 import io.undertow.util.HttpString
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
@@ -365,6 +366,11 @@ class RoutingBuilder(
      * @param handler the handler that will receive the requests; it will be wrapped into a [SuspendingHttpHandler].
      */
     fun options(handler: HttpHandler) = addHandler(OPTIONS, DEFAULT_PREFIX, handler)
+
+    /**
+     *
+     */
+    fun sse(template: String = DEFAULT_PREFIX, handler: ServerSentEventHandler) = addHandler(GET, template, handler)
 
     /**
      * Begin the definition of a set of routes nested in the given path prefix. Every call to this method overwrites a
