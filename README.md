@@ -92,6 +92,10 @@ fun main() {
 
 ## Changelog
 
+### 2.3.0
+
+Added support for declaring Server Sent Event handlers
+
 ### 2.2.0
 
 * Added support for handlers defined with no explicit path
