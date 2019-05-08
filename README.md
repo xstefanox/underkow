@@ -14,7 +14,7 @@ write code that is simple and effective without sacrificing best practices like 
 ## Features
 
 * A simple and clear DSL that can be used to configure Underkow routing using a declarative syntax (inspired by [Ktor](https://ktor.io/))
-* ~~Coroutine based: every request is handled by a [Kotlin coroutine](https://kotlinlang.org/docs/reference/coroutines-overview.html), no need to mess with pools~~ Coroutine support is sill under haevy development in Kotlin, so it has been temporarily removed (see [#254](https://github.com/Kotlin/kotlinx.coroutines/issues/254))
+* ~~Coroutine based: every request is handled by a [Kotlin coroutine](https://kotlinlang.org/docs/reference/coroutines-overview.html), no need to mess with pools~~ Coroutine support is sill under heavy development in Kotlin, so it has been temporarily removed (see [#254](https://github.com/Kotlin/kotlinx.coroutines/issues/254))
 * Completely asynchronous: every request is automatically marked as asynchronous, thus making the I/O thread immediately ready to receive a new request
 * Composable: request handlers and filters can be declared independently and then chained together to create a filter chain
 * Do not mess your classpath: Kotlin and Undertow are the only dependencies
@@ -91,6 +91,10 @@ fun main() {
 ```
 
 ## Changelog
+
+### 2.4.0
+
+Added support for defining a handler to override the default unhandled exception handler.
 
 ### 2.3.0
 
