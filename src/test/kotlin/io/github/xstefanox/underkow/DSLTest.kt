@@ -1832,4 +1832,31 @@ internal class DSLTest {
             )
         }
     }
+
+    @Test
+    fun `unhandled exceptions should be catched by the unhandled exception handler`() {
+
+        val handler = mockHandler().throwing(AnException())
+        val testException2Handler = mockHandler()
+        val exceptionHandler = mockHandler()
+
+        undertow {
+            port = TEST_HTTP_PORT
+            onException = exceptionHandler
+            routing {
+                get("/test", handler)
+                on<AnotherException>(testException2Handler)
+            }
+        } assert {
+            request(
+                method = GET,
+                path = "/test",
+                expect = INTERNAL_SERVER_ERROR
+            )
+        }
+
+        coVerify(exactly = 0) {
+            exceptionHandler.handleRequest(any())
+        }
+    }
 }

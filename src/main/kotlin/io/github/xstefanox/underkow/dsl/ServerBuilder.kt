@@ -53,6 +53,8 @@ class ServerBuilder(
 
     var noRequestTimeout: Int? = null
 
+    var onException: SuspendingHttpHandler? = null
+
     private var routeInitializer: RouteInitializer? = null
 
     /**
@@ -64,7 +66,13 @@ class ServerBuilder(
      * @param init the lambda function used to configure the routing.
      */
     fun routing(prefix: String, vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
-        routeInitializer = RouteInitializer(RoutingBuilder(prefix, filters.toList(), dispatcher), init)
+        routeInitializer = RouteInitializer(RoutingBuilder(
+            prefix,
+            filters.toList(),
+            dispatcher,
+            onException
+                ?: UNHANDLED_EXCEPTION_HANDLER
+        ), init)
     }
 
     /**
@@ -75,7 +83,13 @@ class ServerBuilder(
      * @param init the lambda function used to configure the routing.
      */
     fun routing(vararg filters: SuspendingHttpHandler, init: RoutingBuilder.() -> Unit) {
-        routeInitializer = RouteInitializer(RoutingBuilder(DEFAULT_PREFIX, filters.toList(), dispatcher), init)
+        routeInitializer = RouteInitializer(RoutingBuilder(
+            DEFAULT_PREFIX,
+            filters.toList(),
+            dispatcher,
+            onException
+                ?: UNHANDLED_EXCEPTION_HANDLER
+        ), init)
     }
 
     /**

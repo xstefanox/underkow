@@ -33,7 +33,8 @@ import kotlin.reflect.KClass
 class RoutingBuilder(
     prefix: String = DEFAULT_PREFIX,
     private val filters: Collection<SuspendingHttpHandler> = emptyList(),
-    private val dispatcher: ExchangeDispatcher
+    private val dispatcher: ExchangeDispatcher,
+    private val suspendingHttpHandler: SuspendingHttpHandler
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
@@ -391,7 +392,8 @@ class RoutingBuilder(
         val routingBuilder = RoutingBuilder(
             this.prefix + prefix.trim(),
             this.filters + filters.toList(),
-            dispatcher)
+            dispatcher,
+            suspendingHttpHandler)
 
         paths += RouteInitializer(routingBuilder, init)
     }
@@ -408,7 +410,8 @@ class RoutingBuilder(
         val routingBuilder = RoutingBuilder(
             prefix,
             this.filters + filters.toList(),
-            dispatcher)
+            dispatcher,
+            suspendingHttpHandler)
 
         paths += RouteInitializer(routingBuilder, init)
     }
@@ -464,8 +467,8 @@ class RoutingBuilder(
 
         val routingHandler = RoutingHandler()
 
-        templates.forEach { template, map ->
-            map.forEach { method, handler ->
+        templates.forEach { (template, map) ->
+            map.forEach { (method, handler) ->
                 logger.debug("found route $method $template")
                 routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, UNHANDLED_EXCEPTION_HANDLER), dispatcher))
             }
