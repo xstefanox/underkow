@@ -18,7 +18,7 @@ internal class RoutingBuilderTest {
     @Test
     fun `routing builder should produce a new object on every execution`() {
 
-        val routingBuilder = RoutingBuilder(dispatcher = mockk(), suspendingHttpHandler = mockk())
+        val routingBuilder = RoutingBuilder(dispatcher = mockk(), unhandledExceptionHandler = mockk())
 
         val routingHandler1 = routingBuilder.build()
         val routingHandler2 = routingBuilder.build()
@@ -32,7 +32,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             get("") {}
         }.build()
 
@@ -49,7 +49,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder(" ", dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder(" ", dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             get("") {}
         }.build()
 
@@ -66,7 +66,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder(" /prefix", dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder(" /prefix", dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             get("") {}
         }.build()
 
@@ -83,7 +83,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder("/prefix ", dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder("/prefix ", dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             get("") {}
         }.build()
 
@@ -97,7 +97,7 @@ internal class RoutingBuilderTest {
     @Test
     fun `empty nested prefixes should not be accepted`() {
 
-        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk())
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk())
 
         shouldThrow<IllegalArgumentException> {
             routingBuilder.path("") {}
@@ -107,7 +107,7 @@ internal class RoutingBuilderTest {
     @Test
     fun `blank nested prefixes should not be accepted`() {
 
-        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk())
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk())
 
         shouldThrow<IllegalArgumentException> {
             routingBuilder.path(" ") {}
@@ -120,7 +120,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             path(" /prefix") {
                 get("") {}
             }
@@ -139,7 +139,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/prefix")
 
-        val handler = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             path("/prefix ") {
                 get("") {}
             }
@@ -158,7 +158,7 @@ internal class RoutingBuilderTest {
         val fallbackHandler = mockStandardHandler()
         val exchange = mockExchange().requesting(GET, "/")
 
-        val handler = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk()).apply {
+        val handler = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk()).apply {
             get("") {}
         }.build()
 
@@ -172,7 +172,7 @@ internal class RoutingBuilderTest {
     @Test
     fun `blank paths should not be accepted`() {
 
-        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk())
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk())
 
         shouldThrow<IllegalArgumentException> {
             routingBuilder.path(" ") {}
@@ -182,7 +182,7 @@ internal class RoutingBuilderTest {
     @Test
     fun `routing definition evaluation should happen on builder completion only`() {
 
-        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), suspendingHttpHandler = mockk())
+        val routingBuilder = RoutingBuilder(dispatcher = mockDispatcher(), unhandledExceptionHandler = mockk())
 
         routingBuilder.path("/test") {
             throw AnException()

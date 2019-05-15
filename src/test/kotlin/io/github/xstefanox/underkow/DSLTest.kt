@@ -10,7 +10,10 @@ import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.request
 import io.github.xstefanox.underkow.test.throwing
 import io.mockk.Ordering.ORDERED
+import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.slot
+import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods.DELETE
 import io.undertow.util.Methods.GET
 import io.undertow.util.Methods.HEAD
@@ -1840,6 +1843,14 @@ internal class DSLTest {
         val testException2Handler = mockHandler()
         val exceptionHandler = mockHandler()
 
+        val exchange = slot<HttpServerExchange>()
+
+        coEvery {
+            exceptionHandler.handleRequest(capture(exchange))
+        } coAnswers {
+            exchange.captured.endExchange()
+        }
+
         undertow {
             port = TEST_HTTP_PORT
             onException = exceptionHandler
@@ -1851,11 +1862,11 @@ internal class DSLTest {
             request(
                 method = GET,
                 path = "/test",
-                expect = INTERNAL_SERVER_ERROR
+                expect = OK
             )
         }
 
-        coVerify(exactly = 0) {
+        coVerify(exactly = 1) {
             exceptionHandler.handleRequest(any())
         }
     }

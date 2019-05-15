@@ -34,7 +34,7 @@ class RoutingBuilder(
     prefix: String = DEFAULT_PREFIX,
     private val filters: Collection<SuspendingHttpHandler> = emptyList(),
     private val dispatcher: ExchangeDispatcher,
-    private val suspendingHttpHandler: SuspendingHttpHandler
+    private val unhandledExceptionHandler: SuspendingHttpHandler
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(RoutingBuilder::class.java)
@@ -393,7 +393,7 @@ class RoutingBuilder(
             this.prefix + prefix.trim(),
             this.filters + filters.toList(),
             dispatcher,
-            suspendingHttpHandler)
+            unhandledExceptionHandler)
 
         paths += RouteInitializer(routingBuilder, init)
     }
@@ -411,7 +411,7 @@ class RoutingBuilder(
             prefix,
             this.filters + filters.toList(),
             dispatcher,
-            suspendingHttpHandler)
+            unhandledExceptionHandler)
 
         paths += RouteInitializer(routingBuilder, init)
     }
@@ -470,7 +470,7 @@ class RoutingBuilder(
         templates.forEach { (template, map) ->
             map.forEach { (method, handler) ->
                 logger.debug("found route $method $template")
-                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, UNHANDLED_EXCEPTION_HANDLER), dispatcher))
+                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, unhandledExceptionHandler), dispatcher))
             }
         }
 

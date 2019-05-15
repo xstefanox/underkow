@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
  */
 class SuspendingExceptionHandler(
     private val exceptionHandlers: Map<KClass<out Throwable>, SuspendingHttpHandler>,
-    private val unhandledExceptionHandler: UnhandledExceptionHandler
+    private val unhandledExceptionHandler: SuspendingHttpHandler
 ) : SuspendingHttpHandler {
 
     /**
