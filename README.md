@@ -92,6 +92,10 @@ fun main() {
 
 ## Changelog
 
+### 2.4.1
+
+Fix: missing default exception handler propagation to every route.
+
 ### 2.4.0
 
 Added support for defining a handler to override the default unhandled exception handler.
