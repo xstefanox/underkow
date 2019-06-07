@@ -4,7 +4,7 @@ buildscript {
             kotlintest : '3.3.2',
             undertow   : '2.0.20.Final',
             slf4j      : '1.7.25',
-            restassured: '3.3.0',
+            restassured: '4.0.0',
             mockk      : '1.9.3',
             coroutines : '1.2.1',
             klaxon     : '5.0.5',
@@ -100,6 +100,7 @@ compileTestKotlin {
 }
 
 ktlint {
+    version = '0.33.0'
     coloredOutput = false
 }
 
