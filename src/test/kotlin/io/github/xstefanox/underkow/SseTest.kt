@@ -8,17 +8,17 @@ import io.github.xstefanox.underkow.test.assert
 import io.kotlintest.matchers.beEmpty
 import io.kotlintest.shouldNot
 import io.undertow.Handlers.serverSentEvents
+import java.lang.Thread.sleep
+import java.net.URI
+import java.time.Duration
+import java.util.UUID.randomUUID
+import kotlin.concurrent.thread
 import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import net.jodah.failsafe.function.CheckedRunnable
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.Thread.sleep
-import java.net.URI
-import java.time.Duration
-import java.util.UUID.randomUUID
-import kotlin.concurrent.thread
 
 internal class SseTest {
 

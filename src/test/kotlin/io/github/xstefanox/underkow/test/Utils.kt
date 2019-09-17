@@ -24,11 +24,11 @@ import io.undertow.util.Methods.OPTIONS
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
-import kotlinx.coroutines.runBlocking
-import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.time.temporal.ChronoUnit.SECONDS
 import java.util.concurrent.Executor
+import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 
 /**
  * The default TCP port used for testing

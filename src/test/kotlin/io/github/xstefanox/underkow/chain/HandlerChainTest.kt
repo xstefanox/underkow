@@ -15,8 +15,8 @@ import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
+import org.junit.jupiter.api.Test
 
 internal class HandlerChainTest {
 

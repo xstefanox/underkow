@@ -19,9 +19,9 @@ import io.undertow.util.Methods.OPTIONS
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
+import kotlin.reflect.KClass
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import kotlin.reflect.KClass
 
 /**
  * A builder used to define the routes supported under a configured path prefix.
