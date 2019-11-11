@@ -3,6 +3,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.xstefanox/underkow/badge.svg)](https://search.maven.org/search?q=a:underkow)
 [![Build Status](https://travis-ci.com/xstefanox/underkow.svg?branch=master)](https://travis-ci.com/xstefanox/underkow)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fxstefanox%2Funderkow.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fxstefanox%2Funderkow?ref=badge_shield)
 
 _A Kotlin declarative DSL for Undertow routing configuration_
 
@@ -129,3 +130,7 @@ Fix: dependencies were not defined correctly and the user had to explicitly add 
 ### 1.0.0
 
 First release
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fxstefanox%2Funderkow.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fxstefanox%2Funderkow?ref=badge_large)
