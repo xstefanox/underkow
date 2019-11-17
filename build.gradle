@@ -6,6 +6,7 @@ buildscript {
             slf4j      : '1.7.25',
             restassured: '4.1.2',
             mockk      : '1.9.3',
+            okhttp     : '4.2.2',
             coroutines : '1.3.1',
             klaxon     : '5.2',
             junit      : '5.5.2',
@@ -47,6 +48,7 @@ dependencies {
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: v.kotlin
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: v.coroutines
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: v.okhttp
     api group: 'io.undertow', name: 'undertow-core', version: v.undertow
     api group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
 
@@ -71,9 +73,6 @@ configurations.all {
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-common', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: v.kotlin
         force group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: v.kotlin
-        force group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
-        force group: 'org.opentest4j', name: 'opentest4j', version: '1.1.1'
-        force group: 'org.slf4j', name: 'slf4j-api', version: v.slf4j
     }
 }
 
