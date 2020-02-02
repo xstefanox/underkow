@@ -12,6 +12,7 @@ version = findProperty("release") ?: "SNAPSHOT"
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("org.jetbrains.gradle.plugin.idea-ext")
     id("org.jlleitschuh.gradle.ktlint")
     id("com.github.ben-manes.versions")
@@ -33,7 +34,7 @@ sourceSets {
 }
 
 val exampleImplementation: Configuration by configurations.named("exampleImplementation")
-exampleImplementation.extendsFrom(configurations.testImplementation.get())
+exampleImplementation.extendsFrom(configurations.implementation.get())
 
 dependencies {
 
@@ -41,9 +42,9 @@ dependencies {
     val eventsourceVersion: String by project
     val failsafeVersion: String by project
     val junitVersion: String by project
-    val klaxonVersion: String by project
     val kotlinVersion: String by project
     val kotlintestVersion: String by project
+    val kotlinxSerializationVersion: String by project
     val mockkVersion: String by project
     val okhttpVersion: String by project
     val restassuredVersion: String by project
@@ -66,7 +67,8 @@ dependencies {
     testImplementation(group = "net.jodah", name = "failsafe", version = failsafeVersion)
     testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = junitVersion)
 
-    exampleImplementation(group = "com.beust", name = "klaxon", version = klaxonVersion)
+    exampleImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-runtime", version = kotlinxSerializationVersion)
+    exampleImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
 }
 
 configurations {
@@ -87,6 +89,7 @@ tasks.withType<KotlinCompile> {
         apiVersion = "1.3"
         languageVersion = "1.3"
         allWarningsAsErrors = true
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xuse-experimental=kotlin.Experimental")
     }
 }
 

@@ -5,6 +5,7 @@ import io.github.xstefanox.underkow.chain.next
 import io.github.xstefanox.underkow.undertow
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.ResponseCommitListener
+import io.undertow.server.handlers.ExceptionHandler.THROWABLE
 import io.undertow.util.StatusCodes.BAD_REQUEST
 import io.undertow.util.StatusCodes.CREATED
 import io.undertow.util.StatusCodes.NOT_FOUND
@@ -14,7 +15,10 @@ import org.slf4j.LoggerFactory
 private val logger = LoggerFactory.getLogger("PetStore")
 
 internal val responseLogger = ResponseCommitListener { exchange ->
-    logger.info("[RES] ${exchange.requestMethod} ${exchange.requestPath} : ${exchange.statusCode}")
+
+    val throwable = exchange.getAttachment(THROWABLE)
+
+    logger.info("[RES] ${exchange.requestMethod} ${exchange.requestPath} : ${exchange.statusCode} $throwable")
 }
 
 internal val requestLogger = object : SuspendingHttpHandler {
@@ -47,7 +51,7 @@ fun main() {
             path("/pets", requestLogger) {
 
                 get { exchange ->
-                    exchange.send(OK, CollectionResponse(pets.values))
+                    exchange.send(OK, CollectionResponse(pets.values.toList()))
                 }
 
                 get("/{id}") { exchange ->
@@ -65,15 +69,11 @@ fun main() {
 
                     exchange.requestReceiver.receiveFullString { _, body ->
 
-                        val name = (json.parse<PetPost>(body) ?: throw RuntimeException()).name
+                        val name = (KOTLINX_JSON.parse(PetPost.serializer(), body)).name
                         val pet = Pet(PetId(), name)
 
                         if (petNames.putIfAbsent(name, pet) != null) {
-                            exchange.send(BAD_REQUEST, """
-                            {
-                                "message": "a pet with name '$name' already exists"
-                            }
-                        """.trimIndent())
+                            exchange.send(BAD_REQUEST, ErrorResponse("a pet with name '$name' already exists"))
                         } else {
 
                             logger.info("creating pet $pet")
