@@ -33,6 +33,7 @@ sourceSets {
 }
 
 val exampleImplementation: Configuration by configurations.named("exampleImplementation")
+exampleImplementation.extendsFrom(configurations.testImplementation.get())
 
 dependencies {
 
