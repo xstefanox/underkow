@@ -53,7 +53,6 @@ dependencies {
     implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:${Version.kotlin}"))
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = Version.kotlin)
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = Version.coroutines)
-    implementation(group = "com.squareup.okhttp3", name = "okhttp", version = Version.okhttp)
     api(group = "io.undertow", name = "undertow-core", version = Version.undertow)
     api(group = "org.slf4j", name = "slf4j-api", version = Version.slf4j)
 
@@ -62,9 +61,10 @@ dependencies {
     testImplementation(group = "io.rest-assured", name = "rest-assured", version = Version.restassured)
     testImplementation(group = "io.mockk", name = "mockk", version = Version.mockk)
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = Version.junit)
-    testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = Version.junit)
     testImplementation(group = "com.launchdarkly", name = "okhttp-eventsource", version = Version.eventsource)
+    testImplementation(group = "com.squareup.okhttp3", name = "okhttp", version = Version.okhttp)
     testImplementation(group = "net.jodah", name = "failsafe", version = Version.failsafe)
+    testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = Version.junit)
 
     exampleImplementation(group = "com.beust", name = "klaxon", version = Version.klaxon)
 }
