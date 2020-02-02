@@ -7,6 +7,9 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+group = "io.github.xstefanox"
+version = findProperty("release") ?: "SNAPSHOT"
+
 object Version {
     const val kotlin = "1.3.61"
     const val kotlintest = "3.4.2"
@@ -137,6 +140,8 @@ publishing {
     publications {
         create<MavenPublication>("mavenKotlin") {
             from(components.named("kotlin").get())
+            artifact(sourcesJar)
+            artifact(javadocJar)
             versionMapping {
                 usage("java-api") {
                     fromResolutionOf("runtimeClasspath")
@@ -188,6 +193,3 @@ signing {
     useGpgCmd()
     sign(publishing.publications["mavenKotlin"])
 }
-
-group = "io.github.xstefanox"
-version = findProperty("release") ?: "SNAPSHOT"
