@@ -329,7 +329,11 @@ class RoutingBuilder(
      * @param template the route template uri.
      * @param handler the handler that will receive the requests, defined as a lambda function.
      */
-    fun options(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(OPTIONS, template, handler)
+    fun options(template: String, handler: suspend (HttpServerExchange) -> Unit) = addHandler(
+        OPTIONS,
+        template,
+        handler
+    )
 
     /**
      * Add a new OPTIONS route to the list of routes configured by this builder.
@@ -470,7 +474,15 @@ class RoutingBuilder(
         templates.forEach { (template, map) ->
             map.forEach { (method, handler) ->
                 logger.debug("found route $method $template")
-                routingHandler.add(method, template, HandlerChain(filters + handler, SuspendingExceptionHandler(exceptions, unhandledExceptionHandler), dispatcher))
+                routingHandler.add(
+                    method,
+                    template,
+                    HandlerChain(
+                        filters + handler,
+                        SuspendingExceptionHandler(exceptions, unhandledExceptionHandler),
+                        dispatcher
+                    )
+                )
             }
         }
 
@@ -495,11 +507,19 @@ class RoutingBuilder(
         pathHandlers[method] = handler
     }
 
-    private fun addHandler(method: HttpString, template: String = DEFAULT_PREFIX, handler: HttpHandler) {
+    private fun addHandler(
+        method: HttpString,
+        template: String = DEFAULT_PREFIX,
+        handler: HttpHandler
+    ) {
         addHandler(method, template, HttpHandlerAdapter(handler))
     }
 
-    private fun addHandler(method: HttpString, template: String = DEFAULT_PREFIX, handler: suspend (HttpServerExchange) -> Unit) {
+    private fun addHandler(
+        method: HttpString,
+        template: String = DEFAULT_PREFIX,
+        handler: suspend (HttpServerExchange) -> Unit
+    ) {
         addHandler(method, template, FunctionHandlerAdapter(handler))
     }
 }

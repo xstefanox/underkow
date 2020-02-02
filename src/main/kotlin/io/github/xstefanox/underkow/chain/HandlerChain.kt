@@ -56,7 +56,9 @@ class HandlerChain(
         dispatcher.dispatch(exchange) {
             try {
                 head.handleRequest(exchange)
-            } catch (t: Throwable) {
+                // catching a Throwable is actually the right thing to do to avoid having a stale thread that will never
+                // handle the exchange properly
+            } catch (@Suppress("TooGenericExceptionCaught") t: Throwable) {
                 exchange.putAttachment(THROWABLE, t)
                 exceptionHandler.handleRequest(exchange)
             }
