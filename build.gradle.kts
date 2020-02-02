@@ -10,21 +10,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "io.github.xstefanox"
 version = findProperty("release") ?: "SNAPSHOT"
 
-object Version {
-    const val kotlin = "1.3.61"
-    const val kotlintest = "3.4.2"
-    const val undertow = "2.0.29.Final"
-    const val slf4j = "1.7.25"
-    const val restassured = "4.2.0"
-    const val mockk = "1.9.3"
-    const val okhttp = "4.3.1"
-    const val coroutines = "1.3.3"
-    const val klaxon = "5.2"
-    const val junit = "5.6.0"
-    const val eventsource = "1.10.1"
-    const val failsafe = "2.3.2"
-}
-
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.gradle.plugin.idea-ext")
@@ -50,23 +35,37 @@ sourceSets {
 val exampleImplementation: Configuration by configurations.named("exampleImplementation")
 
 dependencies {
-    implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:${Version.kotlin}"))
-    implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = Version.kotlin)
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = Version.coroutines)
-    api(group = "io.undertow", name = "undertow-core", version = Version.undertow)
-    api(group = "org.slf4j", name = "slf4j-api", version = Version.slf4j)
 
-    testImplementation(group = "io.kotlintest", name = "kotlintest-assertions", version = Version.kotlintest)
-    testImplementation(group = "org.slf4j", name = "slf4j-simple", version = Version.slf4j)
-    testImplementation(group = "io.rest-assured", name = "rest-assured", version = Version.restassured)
-    testImplementation(group = "io.mockk", name = "mockk", version = Version.mockk)
-    testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = Version.junit)
-    testImplementation(group = "com.launchdarkly", name = "okhttp-eventsource", version = Version.eventsource)
-    testImplementation(group = "com.squareup.okhttp3", name = "okhttp", version = Version.okhttp)
-    testImplementation(group = "net.jodah", name = "failsafe", version = Version.failsafe)
-    testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = Version.junit)
+    val coroutinesVersion: String by project
+    val eventsourceVersion: String by project
+    val failsafeVersion: String by project
+    val junitVersion: String by project
+    val klaxonVersion: String by project
+    val kotlinVersion: String by project
+    val kotlintestVersion: String by project
+    val mockkVersion: String by project
+    val okhttpVersion: String by project
+    val restassuredVersion: String by project
+    val slf4jVersion: String by project
+    val undertowVersion: String by project
 
-    exampleImplementation(group = "com.beust", name = "klaxon", version = Version.klaxon)
+    implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
+    implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = kotlinVersion)
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = coroutinesVersion)
+    api(group = "io.undertow", name = "undertow-core", version = undertowVersion)
+    api(group = "org.slf4j", name = "slf4j-api", version = slf4jVersion)
+
+    testImplementation(group = "io.kotlintest", name = "kotlintest-assertions", version = kotlintestVersion)
+    testImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
+    testImplementation(group = "io.rest-assured", name = "rest-assured", version = restassuredVersion)
+    testImplementation(group = "io.mockk", name = "mockk", version = mockkVersion)
+    testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = junitVersion)
+    testImplementation(group = "com.launchdarkly", name = "okhttp-eventsource", version = eventsourceVersion)
+    testImplementation(group = "com.squareup.okhttp3", name = "okhttp", version = okhttpVersion)
+    testImplementation(group = "net.jodah", name = "failsafe", version = failsafeVersion)
+    testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = junitVersion)
+
+    exampleImplementation(group = "com.beust", name = "klaxon", version = klaxonVersion)
 }
 
 configurations {
