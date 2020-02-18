@@ -69,6 +69,29 @@ dependencies {
 
     exampleImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-runtime", version = kotlinxSerializationVersion)
     exampleImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
+
+    constraints {
+        api(group = "org.slf4j", name = "slf4j-api") {
+            version {
+                strictly(slf4jVersion)
+            }
+        }
+        api(group = "com.squareup.okhttp3", name = "okhttp") {
+            version {
+                strictly(okhttpVersion)
+            }
+        }
+        api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib") {
+            version {
+                strictly(kotlinVersion)
+            }
+        }
+        api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-common") {
+            version {
+                strictly(kotlinVersion)
+            }
+        }
+    }
 }
 
 configurations {
