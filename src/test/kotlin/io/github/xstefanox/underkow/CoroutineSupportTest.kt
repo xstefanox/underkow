@@ -1,3 +1,5 @@
+@file:Suppress("kotlin:S100")
+
 package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
