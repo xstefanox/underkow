@@ -1,5 +1,3 @@
-@file:Suppress("kotlin:S100")
-
 package io.github.xstefanox.underkow
 
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
@@ -18,6 +16,7 @@ internal class CoroutineSupportTest {
     private val logger: Logger = LoggerFactory.getLogger(CoroutineSupportTest::class.java)
 
     @Test
+    @Suppress("kotlin:S100")
     fun `handlers could be implemented with suspending functions`() {
 
         undertow {
