@@ -22,6 +22,12 @@ jobs:
       jdk: openjdk8
       install: skip
       script: "./gradlew check"
+    - stage: qa
+      script: sonar-scanner
 stages:
   - build
   - test
+  - qa
+addons:
+  sonarcloud:
+    organization: xstefanox
