@@ -15,7 +15,7 @@ version = findProperty("release") ?: "SNAPSHOT"
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("org.jetbrains.kotlinx.kover")
+//    id("org.jetbrains.kotlinx.kover")
     id("org.jetbrains.gradle.plugin.idea-ext")
     id("org.jetbrains.dokka")
     id("org.jlleitschuh.gradle.ktlint")
@@ -24,6 +24,7 @@ plugins {
     id("maven-publish")
     id("java-library")
     id("org.sonarqube")
+    id("jacoco")
 }
 
 repositories {
@@ -152,6 +153,13 @@ tasks.withType<DependencyUpdatesTask> {
 ktlint {
     coloredOutput.set(false)
     version.set("0.44.0")
+}
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.required.set(true)
+    }
+    dependsOn(tasks.test)
 }
 
 tasks.test {
