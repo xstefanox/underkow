@@ -15,7 +15,7 @@ version = findProperty("release") ?: "SNAPSHOT"
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
-//    id("org.jetbrains.kotlinx.kover")
+    id("org.jetbrains.kotlinx.kover")
     id("org.jetbrains.gradle.plugin.idea-ext")
     id("org.jetbrains.dokka")
     id("org.jlleitschuh.gradle.ktlint")
@@ -24,7 +24,6 @@ plugins {
     id("maven-publish")
     id("java-library")
     id("org.sonarqube")
-    id("jacoco")
 }
 
 repositories {
@@ -154,12 +153,6 @@ ktlint {
     coloredOutput.set(false)
     version.set("0.44.0")
 }
-
-//sonarqube {
-//    properties {
-//        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/build/reports/kover/report.xml")
-//    }
-//}
 
 tasks.test {
     useJUnitPlatform()
