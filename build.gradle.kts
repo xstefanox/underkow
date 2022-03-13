@@ -15,13 +15,15 @@ version = findProperty("release") ?: "SNAPSHOT"
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jetbrains.kotlinx.kover")
     id("org.jetbrains.gradle.plugin.idea-ext")
+    id("org.jetbrains.dokka")
     id("org.jlleitschuh.gradle.ktlint")
     id("com.github.ben-manes.versions")
-    id("org.jetbrains.dokka")
     id("signing")
     id("maven-publish")
     id("java-library")
+    id("org.sonarqube")
 }
 
 repositories {
