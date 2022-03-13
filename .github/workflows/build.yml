@@ -41,10 +41,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Artifact creation
-        run: ./gradlew jar
-
-      - name: Sonar analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew koverXmlReport sonarqube --info
+        run: ./gradlew jar koverXmlReport sonarqube
