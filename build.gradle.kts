@@ -137,8 +137,10 @@ tasks.withType<DependencyUpdatesTask> {
 }
 
 ktlint {
+    val ktlintVersion: String by project
+
     coloredOutput.set(false)
-    version.set("0.44.0")
+    version.set(ktlintVersion)
 }
 
 tasks.test {
