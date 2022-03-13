@@ -1,5 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import org.gradle.api.JavaVersion.VERSION_1_8
+import org.gradle.api.JavaVersion.VERSION_11
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
@@ -120,13 +120,15 @@ configurations {
 
 tasks.withType<KotlinCompile> {
 
-    sourceCompatibility = VERSION_1_8.toString()
+    val kotlinVersion = "1.6"
+
+    sourceCompatibility = VERSION_11.toString()
     targetCompatibility = sourceCompatibility
 
     kotlinOptions {
         jvmTarget = sourceCompatibility
-        apiVersion = "1.6"
-        languageVersion = "1.6"
+        apiVersion = kotlinVersion
+        languageVersion = kotlinVersion
         allWarningsAsErrors = true
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
