@@ -6,8 +6,8 @@ import io.github.xstefanox.underkow.test.mockDispatcher
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockStandardHandler
 import io.github.xstefanox.underkow.test.requesting
-import io.kotlintest.shouldNotBe
-import io.kotlintest.shouldThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
 import io.undertow.util.Methods.GET

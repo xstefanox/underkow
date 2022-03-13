@@ -9,11 +9,13 @@ import kotlinx.coroutines.runBlocking
 class XnioTaskThreadExchangeDispatcher : ExchangeDispatcher {
 
     override fun dispatch(exchange: HttpServerExchange, block: suspend () -> Unit) {
-        exchange.dispatch(Runnable {
-            // the runnable is dispatched to a task thread, hence it is safe to block
-            runBlocking {
-                block()
+        exchange.dispatch(
+            Runnable {
+                // the runnable is dispatched to a task thread, hence it is safe to block
+                runBlocking {
+                    block()
+                }
             }
-        })
+        )
     }
 }

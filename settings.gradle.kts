@@ -2,7 +2,6 @@ rootProject.name = "underkow"
 
 pluginManagement {
 
-    val dokkaPluginVersion: String by settings
     val ideaPluginVersion: String by settings
     val kotlinVersion: String by settings
     val ktlintPluginVersion: String by settings
@@ -14,7 +13,7 @@ pluginManagement {
         id("org.jetbrains.gradle.plugin.idea-ext") version ideaPluginVersion
         id("org.jlleitschuh.gradle.ktlint") version ktlintPluginVersion
         id("com.github.ben-manes.versions") version versionsPluginVersion
-        id("org.jetbrains.dokka") version dokkaPluginVersion
+        id("org.jetbrains.dokka") version kotlinVersion
         id("signing")
         id("maven")
         id("java-library")

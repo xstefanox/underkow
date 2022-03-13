@@ -5,20 +5,20 @@ import com.launchdarkly.eventsource.EventSource
 import com.launchdarkly.eventsource.MessageEvent
 import io.github.xstefanox.underkow.test.TEST_HTTP_PORT
 import io.github.xstefanox.underkow.test.assert
-import io.kotlintest.matchers.beEmpty
-import io.kotlintest.shouldNot
+import io.kotest.matchers.collections.beEmpty
+import io.kotest.matchers.shouldNot
 import io.undertow.Handlers.serverSentEvents
-import java.lang.Thread.sleep
-import java.net.URI
-import java.time.Duration
-import java.util.UUID.randomUUID
-import kotlin.concurrent.thread
 import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import net.jodah.failsafe.function.CheckedRunnable
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.lang.Thread.sleep
+import java.net.URI
+import java.time.Duration
+import java.util.UUID.randomUUID
+import kotlin.concurrent.thread
 
 internal class SseTest {
 
@@ -101,11 +101,13 @@ internal class SseTest {
 
                     eventSource.start()
 
-                    Failsafe.with(retryPolicy).run(CheckedRunnable {
-                        synchronized(lock) {
-                            messages shouldNot beEmpty()
+                    Failsafe.with(retryPolicy).run(
+                        CheckedRunnable {
+                            synchronized(lock) {
+                                messages shouldNot beEmpty()
+                            }
                         }
-                    })
+                    )
                 }
             }
         } finally {

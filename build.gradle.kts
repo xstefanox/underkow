@@ -1,3 +1,4 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.JavaVersion.VERSION_1_8
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
@@ -6,6 +7,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR
 import org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.text.RegexOption.IGNORE_CASE
 
 group = "io.github.xstefanox"
 version = findProperty("release") ?: "SNAPSHOT"
@@ -23,7 +25,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 sourceSets {
@@ -43,7 +45,7 @@ dependencies {
     val failsafeVersion: String by project
     val junitVersion: String by project
     val kotlinVersion: String by project
-    val kotlintestVersion: String by project
+    val kotestVersion: String by project
     val kotlinxSerializationVersion: String by project
     val mockkVersion: String by project
     val okhttpVersion: String by project
@@ -57,7 +59,8 @@ dependencies {
     api(group = "io.undertow", name = "undertow-core", version = undertowVersion)
     api(group = "org.slf4j", name = "slf4j-api", version = slf4jVersion)
 
-    testImplementation(group = "io.kotlintest", name = "kotlintest-assertions", version = kotlintestVersion)
+    testImplementation(group = "io.kotest", name = "kotest-assertions-core", version = kotestVersion)
+    testImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = coroutinesVersion)
     testImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
     testImplementation(group = "io.rest-assured", name = "rest-assured", version = restassuredVersion)
     testImplementation(group = "io.mockk", name = "mockk", version = mockkVersion)
@@ -67,7 +70,11 @@ dependencies {
     testImplementation(group = "net.jodah", name = "failsafe", version = failsafeVersion)
     testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = junitVersion)
 
-    exampleImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-runtime", version = kotlinxSerializationVersion)
+    exampleImplementation(
+        group = "org.jetbrains.kotlinx",
+        name = "kotlinx-serialization-runtime",
+        version = kotlinxSerializationVersion
+    )
     exampleImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
 
     constraints {
@@ -91,6 +98,11 @@ dependencies {
                 strictly(kotlinVersion)
             }
         }
+        api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8") {
+            version {
+                strictly(kotlinVersion)
+            }
+        }
     }
 }
 
@@ -99,6 +111,10 @@ configurations {
         resolutionStrategy {
             failOnVersionConflict()
         }
+    }
+
+    named("ktlint") {
+        exclude(module = "ktlint-reporter-sarif")
     }
 }
 
@@ -109,16 +125,29 @@ tasks.withType<KotlinCompile> {
 
     kotlinOptions {
         jvmTarget = sourceCompatibility
-        apiVersion = "1.3"
-        languageVersion = "1.3"
+        apiVersion = "1.6"
+        languageVersion = "1.6"
         allWarningsAsErrors = true
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xuse-experimental=kotlin.Experimental")
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        )
+    }
+}
+
+tasks.withType<DependencyUpdatesTask> {
+
+    fun String.isNonStable(): Boolean {
+        return Regex(".*[-.](alpha|beta|rc[0-9]*|m[0-9]*|dev).*", IGNORE_CASE).matches(this)
+    }
+
+    rejectVersionIf {
+        candidate.version.isNonStable()
     }
 }
 
 ktlint {
     coloredOutput.set(false)
-    version.set("0.36.0")
+    version.set("0.44.0")
 }
 
 tasks.test {
@@ -142,9 +171,8 @@ idea {
     }
 }
 
-tasks.dokka {
-    outputFormat = "javadoc"
-    outputDirectory = "$buildDir/javadoc"
+tasks.dokkaHtml {
+    outputDirectory.set(buildDir.resolve("javadoc"))
 }
 
 val sourcesJar = tasks.create<Jar>("sourcesJar") {
@@ -154,7 +182,7 @@ val sourcesJar = tasks.create<Jar>("sourcesJar") {
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+    from(tasks.dokkaHtml)
 }
 
 artifacts {

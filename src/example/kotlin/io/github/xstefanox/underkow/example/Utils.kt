@@ -18,15 +18,20 @@ internal const val APPLICATION_JSON = "application/json"
 
 internal val REQUEST_ID = AttachmentKey.create(RequestId::class.java)
 
-internal val KOTLINX_JSON = Json(JsonConfiguration.Stable.copy(strictMode = false), SerializersModule {
-    contextual(PetIdSerializer)
-})
+internal val KOTLINX_JSON = Json(
+    JsonConfiguration.Stable.copy(strictMode = false),
+    SerializersModule {
+        contextual(PetIdSerializer)
+    }
+)
 
 internal fun String.toPetId(): PetId = PetId(this)
 
 internal val HttpServerExchange.petId: PetId
-    get() = (getAttachment<PathTemplateMatch>(PathTemplateMatch.ATTACHMENT_KEY).parameters["id"]
-        ?: throw RuntimeException()).toPetId()
+    get() = (
+        getAttachment(PathTemplateMatch.ATTACHMENT_KEY).parameters["id"]
+            ?: throw RuntimeException()
+        ).toPetId()
 
 internal fun HttpServerExchange.send(statusCode: Int) {
     this.statusCode = statusCode

@@ -8,20 +8,21 @@ import io.github.xstefanox.underkow.test.mockDispatcher
 import io.github.xstefanox.underkow.test.mockExchange
 import io.github.xstefanox.underkow.test.mockFilter
 import io.github.xstefanox.underkow.test.mockHandler
-import io.kotlintest.shouldThrow
+import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.Ordering.ORDERED
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import kotlin.reflect.KClass
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import kotlin.reflect.KClass
 
 internal class HandlerChainTest {
 
     @Test
-    fun `a delegating filter should trigger the execution of the final handler`() {
+    fun `a delegating filter should trigger the execution of the final handler`() = runTest {
 
         val handler1 = mockFilter()
         val handler2 = mockHandler()
@@ -42,7 +43,7 @@ internal class HandlerChainTest {
     }
 
     @Test
-    fun `multiple filters should delegate recursively until the final handler`() {
+    fun `multiple filters should delegate recursively until the final handler`() = runTest {
 
         val handler1 = mockFilter()
         val handler2 = mockFilter()
@@ -65,7 +66,7 @@ internal class HandlerChainTest {
     }
 
     @Test
-    fun `when a filter does not delegate, the following filters should not be triggered`() {
+    fun `when a filter does not delegate, the following filters should not be triggered`() = runTest {
 
         val handler1 = mockFilter()
         val handler2 = mockHandler()
@@ -114,7 +115,7 @@ internal class HandlerChainTest {
     }
 
     @Test
-    fun `the last handler in the chain should not forward the request handling`() {
+    fun `the last handler in the chain should not forward the request handling`() = runTest {
 
         val handler = mockFilter()
         val exchange = mockExchange()

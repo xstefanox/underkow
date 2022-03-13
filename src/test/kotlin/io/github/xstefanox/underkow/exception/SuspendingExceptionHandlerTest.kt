@@ -42,9 +42,12 @@ internal class SuspendingExceptionHandlerTest {
         }
         val unhandledExceptionHandler = mockk<UnhandledExceptionHandler>()
 
-        val exceptionHandler = SuspendingExceptionHandler(mapOf(
-            AnException::class to handler
-        ), unhandledExceptionHandler)
+        val exceptionHandler = SuspendingExceptionHandler(
+            mapOf(
+                AnException::class to handler
+            ),
+            unhandledExceptionHandler
+        )
 
         runBlocking {
             exceptionHandler.handleRequest(exchange)

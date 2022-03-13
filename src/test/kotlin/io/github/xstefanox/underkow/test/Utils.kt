@@ -3,7 +3,7 @@ package io.github.xstefanox.underkow.test
 import io.github.xstefanox.underkow.SuspendingHttpHandler
 import io.github.xstefanox.underkow.chain.next
 import io.github.xstefanox.underkow.dispatcher.ExchangeDispatcher
-import io.kotlintest.shouldThrow
+import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
@@ -24,11 +24,10 @@ import io.undertow.util.Methods.OPTIONS
 import io.undertow.util.Methods.PATCH
 import io.undertow.util.Methods.POST
 import io.undertow.util.Methods.PUT
-import java.time.Duration
-import java.time.temporal.ChronoUnit.SECONDS
-import java.util.concurrent.Executor
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
+import java.util.concurrent.Executor
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * The default TCP port used for testing
@@ -235,9 +234,9 @@ fun request(method: HttpString, path: String, expect: Int) {
 }
 
 inline fun <reified T : Throwable> coShouldThrow(noinline block: suspend () -> Any?): T = runBlocking {
-    shouldThrow<T> {
+    shouldThrow {
         block()
     }
 }
 
-fun <T> eventually(f: () -> T): T = io.kotlintest.eventually(Duration.of(5, SECONDS), AssertionError::class.java, f)
+suspend fun <T> eventually(f: suspend () -> T): T = io.kotest.assertions.timing.eventually(5.seconds, AssertionError::class, f)

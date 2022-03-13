@@ -5,8 +5,8 @@ import io.github.xstefanox.underkow.test.assert
 import io.github.xstefanox.underkow.test.request
 import io.undertow.util.Methods.GET
 import io.undertow.util.StatusCodes.OK
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -44,9 +44,11 @@ internal class CoroutineSupportTest {
     }
 
     private suspend fun doSomethingSuspending(): String {
-        val deferred = GlobalScope.async {
-            logger.info("running async")
-            "this is the result"
+        val deferred = coroutineScope {
+            async {
+                logger.info("running async")
+                "this is the result"
+            }
         }
         return deferred.await()
     }
