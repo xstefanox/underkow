@@ -22,6 +22,7 @@ plugins {
     id("signing")
     id("maven-publish")
     id("java-library")
+    id("org.sonarqube")
 }
 
 repositories {

@@ -5,6 +5,7 @@ pluginManagement {
     val ideaPluginVersion: String by settings
     val kotlinVersion: String by settings
     val ktlintPluginVersion: String by settings
+    val sonarqubeVersion: String by settings
     val versionsPluginVersion: String by settings
 
     plugins {
@@ -17,5 +18,6 @@ pluginManagement {
         id("signing")
         id("maven")
         id("java-library")
+        id("org.sonarqube") version sonarqubeVersion
     }
 }
