@@ -4,12 +4,15 @@ on:
 jobs:
 
   build:
-    name: Build the artifact
+    name: Project build and analysis
     runs-on: ubuntu-latest
     steps:
 
       - name: Project checkout
         uses: actions/checkout@v3
+        with:
+          # shallow clone disabled for a better relevancy of Sonar analysis
+          fetch-depth: 0
 
       - name: Java setup
         uses: actions/setup-java@v3
@@ -37,7 +40,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Artifact build
+      - name: Artifact creation
         run: ./gradlew jar
 
       - name: Sonar analysis
