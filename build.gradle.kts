@@ -68,9 +68,7 @@ dependencies {
     testImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test")
     testImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
     testImplementation(group = "io.rest-assured", name = "rest-assured", version = restassuredVersion)
-    testImplementation(group = "io.mockk", name = "mockk", version = mockkVersion) {
-        exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
-    }
+    testImplementation(group = "io.mockk", name = "mockk", version = mockkVersion)
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = junitVersion)
     testImplementation(group = "com.launchdarkly", name = "okhttp-eventsource", version = eventsourceVersion)
     testImplementation(group = "com.squareup.okhttp3", name = "okhttp", version = okhttpVersion)
@@ -106,18 +104,6 @@ dependencies {
                 strictly(kotlinVersion)
             }
         }
-    }
-}
-
-configurations {
-    all {
-        resolutionStrategy {
-            failOnVersionConflict()
-        }
-    }
-
-    named("ktlint") {
-        exclude(module = "ktlint-reporter-sarif")
     }
 }
 
