@@ -154,6 +154,12 @@ ktlint {
     version.set("0.44.0")
 }
 
+sonarqube {
+    properties {
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/build/reports/kover/report.xml")
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 
