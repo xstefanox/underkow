@@ -55,28 +55,29 @@ dependencies {
     val slf4jVersion: String by project
     val undertowVersion: String by project
 
-    implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
+    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:$coroutinesVersion"))
+    implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:$kotlinxSerializationVersion"))
+
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = kotlinVersion)
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = coroutinesVersion)
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core")
     api(group = "io.undertow", name = "undertow-core", version = undertowVersion)
     api(group = "org.slf4j", name = "slf4j-api", version = slf4jVersion)
 
     testImplementation(group = "io.kotest", name = "kotest-assertions-core", version = kotestVersion)
-    testImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = coroutinesVersion)
+    testImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test")
     testImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
     testImplementation(group = "io.rest-assured", name = "rest-assured", version = restassuredVersion)
-    testImplementation(group = "io.mockk", name = "mockk", version = mockkVersion)
+    testImplementation(group = "io.mockk", name = "mockk", version = mockkVersion) {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
+    }
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = junitVersion)
     testImplementation(group = "com.launchdarkly", name = "okhttp-eventsource", version = eventsourceVersion)
     testImplementation(group = "com.squareup.okhttp3", name = "okhttp", version = okhttpVersion)
     testImplementation(group = "net.jodah", name = "failsafe", version = failsafeVersion)
     testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = junitVersion)
 
-    exampleImplementation(
-        group = "org.jetbrains.kotlinx",
-        name = "kotlinx-serialization-runtime",
-        version = kotlinxSerializationVersion
-    )
+    exampleImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json")
     exampleImplementation(group = "org.slf4j", name = "slf4j-simple", version = slf4jVersion)
 
     constraints {
