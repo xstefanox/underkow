@@ -24,7 +24,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
       - name: Gradle setup
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v2
